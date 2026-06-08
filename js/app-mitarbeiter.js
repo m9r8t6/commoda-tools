@@ -68,7 +68,7 @@ function startSearch() {
     console.log("Sende Daten an n8n:", payload);
 
     //FETCH CALL 
-    const webhookUrl = 'https://e82059f5e4cfbe.lhr.life/webhook-test/mitarbeitersuche';
+    const webhookUrl = 'https://c1eb0836336c0b.lhr.life/webhook-test/mitarbeitersuche';
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

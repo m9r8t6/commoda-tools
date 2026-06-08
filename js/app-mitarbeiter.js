@@ -97,7 +97,10 @@ function startSearch() {
 }
 
 function renderResults(dataArray) {
-    const resultsGrid = document.getElementById('resultsGrid');
+    const resultsContainer = document.getElementById('resultsGrid');
+    // Wir ändern die Klasse per JS von Grid auf Liste, damit das neue CSS greift
+    resultsContainer.className = 'results-list'; 
+    
     const loader = document.getElementById('loader');
     const searchBtn = document.getElementById('searchBtn');
     
@@ -106,25 +109,42 @@ function renderResults(dataArray) {
     searchBtn.disabled = false;
 
     dataArray.forEach(person => {
-        const initials = person.name.split(' ').map(n => n[0]).join('').substring(0,2);
+        // Initialen für das Avatarbild
+        const initials = person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
 
-        const cardHTML = `
-            <div class="candidate-card">
-                <div class="card-header">
+        // Logik für das Plattform-Icon
+        let platformIcon = person.platform.charAt(0).toUpperCase(); // Standard: 1. Buchstabe
+        let platformNameLC = person.platform.toLowerCase();
+        
+        if (platformNameLC.includes('linkedin')) platformIcon = 'in';
+        if (platformNameLC.includes('xing')) platformIcon = 'X';
+
+        // HTML für eine Listen-Zeile
+        const rowHTML = `
+            <div class="candidate-row">
+                
+                <div class="row-left">
                     <div class="card-avatar">${initials}</div>
                     <div class="card-info">
-                        <h3>${person.name}</h3>
-                        <p>${person.role}</p>
+                        <h3 style="font-size: 16px; margin-bottom: 2px;">${person.name}</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">${person.role}</p>
                     </div>
                 </div>
-                <div class="card-meta">
-                    📍 ${person.location} <br>
-                    🔗 Gefunden auf ${person.platform}
+
+                <div class="row-middle">
+                    <span style="font-size: 14px; color: var(--text-main); font-weight: 500;">📍 ${person.location}</span>
+                    <span style="font-size: 13px; color: var(--text-muted);">Gefunden auf: ${person.platform}</span>
                 </div>
-                <a href="${person.url}" target="_blank" class="btn-outline">Profil öffnen</a>
+
+                <div class="action-links">
+                    <a href="mailto:?subject=Kontaktanfrage Steuerkanzlei&body=Hallo ${person.name}," title="E-Mail schreiben" class="icon-btn">✉️</a>
+                    
+                    <a href="${person.url}" target="_blank" title="Auf ${person.platform} ansehen" class="icon-btn">${platformIcon}</a>
+                </div>
+
             </div>
         `;
-        resultsGrid.innerHTML += cardHTML;
+        resultsContainer.innerHTML += rowHTML;
     });
 }
 

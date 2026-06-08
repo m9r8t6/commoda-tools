@@ -85,54 +85,44 @@ function startSearch() {
 ok 
 
 function renderResults(dataArray) {
+    // Ergebnisse für später speichern (für den Speicher-Button)
+    sessionStorage.setItem('searchResults', JSON.stringify(dataArray));
+    
     const resultsContainer = document.getElementById('resultsGrid');
-    // Wir ändern die Klasse per JS von Grid auf Liste, damit das neue CSS greift
-    resultsContainer.className = 'results-list'; 
+    resultsContainer.className = 'results-list';
+    resultsContainer.innerHTML = '';
     
-    const loader = document.getElementById('loader');
-    const searchBtn = document.getElementById('searchBtn');
-    
-    loader.style.display = 'none';
-    searchBtn.innerText = "Suchen";
-    searchBtn.disabled = false;
-
-    dataArray.forEach(person => {
-        // Initialen für das Avatarbild
+    dataArray.forEach((person, index) => {
         const initials = person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-
-        // Logik für das Plattform-Icon
-        let platformIcon = person.platform.charAt(0).toUpperCase(); // Standard: 1. Buchstabe
-        let platformNameLC = person.platform.toLowerCase();
         
-        if (platformNameLC.includes('linkedin')) platformIcon = 'in';
-        if (platformNameLC.includes('xing')) platformIcon = 'X';
+        let actionsHTML = ``;
+        
+        // Bedingtes Rendering: Nur anzeigen, wenn Daten vorhanden
+        if (person.email) {
+            actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren">✉️</button>`;
+        }
+        if (person.url) {
+            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn">🔗</a>`;
+        }
+        
+        // Add Button
+        actionsHTML += `<button onclick="saveCandidate(${index})" class="add-btn" title="Speichern">+</button>`;
 
-        // HTML für eine Listen-Zeile
-        const rowHTML = `
+        resultsContainer.innerHTML += `
             <div class="candidate-row">
-                
                 <div class="row-left">
                     <div class="card-avatar">${initials}</div>
                     <div class="card-info">
-                        <h3 style="font-size: 16px; margin-bottom: 2px;">${person.name}</h3>
-                        <p style="font-size: 13px; color: var(--text-muted);">${person.role}</p>
+                        <h3>${person.name}</h3>
+                        <p>${person.role}</p>
                     </div>
                 </div>
-
                 <div class="row-middle">
-                    <span style="font-size: 14px; color: var(--text-main); font-weight: 500;">📍 ${person.location}</span>
-                    <span style="font-size: 13px; color: var(--text-muted);">Gefunden auf: ${person.platform}</span>
+                    <span>📍 ${person.location}</span>
                 </div>
-
-                <div class="action-links">
-                    <a href="mailto:?subject=Kontaktanfrage Steuerkanzlei&body=Hallo ${person.name}," title="E-Mail schreiben" class="icon-btn">✉️</a>
-                    
-                    <a href="${person.url}" target="_blank" title="Auf ${person.platform} ansehen" class="icon-btn">${platformIcon}</a>
-                </div>
-
+                <div class="action-links">${actionsHTML}</div>
             </div>
         `;
-        resultsContainer.innerHTML += rowHTML;
     });
 }
 
@@ -141,4 +131,24 @@ function resetUI() {
     const searchBtn = document.getElementById('searchBtn');
     searchBtn.innerText = "Suchen";
     searchBtn.disabled = false;
+}
+
+// --- NEUE FUNKTION: Speichern ---
+function saveCandidate(personIndex) {
+    const results = JSON.parse(sessionStorage.getItem('searchResults'));
+    const candidate = results[personIndex];
+    let saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+    
+    // Verhindere Duplikate
+    if(!saved.find(c => c.url === candidate.url)) {
+        saved.push(candidate);
+        localStorage.setItem('savedCandidates', JSON.stringify(saved));
+        alert("Kandidat gespeichert!");
+    }
+}
+
+// --- NEUE FUNKTION: E-Mail kopieren ---
+function copyEmail(email) {
+    navigator.clipboard.writeText(email);
+    alert("E-Mail kopiert: " + email);
 }

@@ -3,6 +3,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if(searchBtn) {
         searchBtn.addEventListener('click', startSearch);
     }
+
+    // --- NEU: Datalist Fix (Zeigt immer alle Optionen beim Klicken) ---
+    const datalistInputs = document.querySelectorAll('input[list]');
+    datalistInputs.forEach(input => {
+        // Wenn das Feld angeklickt wird: Aktuellen Wert merken und Feld leeren
+        input.addEventListener('focus', function() {
+            this.dataset.oldValue = this.value; 
+            this.value = ''; 
+        });
+
+        // Wenn man woanders hinklickt: Alten Wert wiederherstellen, falls es leer blieb
+        input.addEventListener('blur', function() {
+            if (this.value === '') {
+                this.value = this.dataset.oldValue || '';
+            }
+        });
+    });
+    // ----------------------------------------------------------------
 });
 
 function startSearch() {

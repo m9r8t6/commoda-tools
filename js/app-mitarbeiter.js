@@ -82,7 +82,7 @@ function startSearch() {
         resetUI();
     });
 }
-
+ok 
 
 function renderResults(dataArray) {
     const resultsContainer = document.getElementById('resultsGrid');

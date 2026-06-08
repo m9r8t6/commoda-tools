@@ -67,8 +67,8 @@ function startSearch() {
 
     console.log("Sende Daten an n8n:", payload);
 
-    /* --- ECHTER FETCH CALL (Für später) --- 
-    const webhookUrl = 'https://n8n.deine-domain.de/webhook/mitarbeitersuche';
+    //FETCH CALL 
+    const webhookUrl = 'https://fc943a8ffdb1d2.lhr.life/webhook-test/mitarbeitersuche';
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -81,20 +81,8 @@ function startSearch() {
         alert("Fehler bei der Serververbindung");
         resetUI();
     });
-    -------------------------------------------------------- */
-
-    // --- MOCK-DATEN FÜR DEN PROTOTYPEN ---
-    setTimeout(() => {
-        const mockData = [
-            { name: "Max Mustermann", role: job, location: ort + (distanz ? ` (Umkreis: ${distanz})` : ""), platform: "LinkedIn", url: "#" },
-            { name: "Anna Schmidt", role: "Senior " + job, location: ort, platform: "Xing", url: "#" },
-            { name: "Thomas Weber", role: job, location: ort, platform: "LinkedIn", url: "#" }
-        ];
-        
-        // Wir kürzen die Mock-Daten auf die eingestellte Anzahl (falls jemand z.B. 2 eingibt)
-        renderResults(mockData.slice(0, anzahl));
-    }, 2000); 
 }
+
 
 function renderResults(dataArray) {
     const resultsContainer = document.getElementById('resultsGrid');

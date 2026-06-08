@@ -1,84 +1,40 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Commoda Tools Hub</title>
-    <!-- CSS einbinden -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="brand">
-            <div class="brand-icon">C</div>
-            Tools Hub
-        </div>
+<header class="topbar">
+    <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
+    
+    <div class="topbar-filters active-filters" id="filters-mitarbeiter">
         
-        <nav class="nav-menu">
-            <!-- Navigationselemente mit data-Attributen für das JavaScript -->
-            <a href="#" class="nav-item active" data-target="mitarbeiter" data-title="Mitarbeitersuche">
-                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-                Mitarbeitersuche
-            </a>
-            
-            <a href="#" class="nav-item" data-target="gesetze" data-title="Gesetzes-Radar">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-                Gesetzes-Radar
-            </a>
-        </nav>
+        <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen" style="width: 180px;">
+        <datalist id="jobOptions">
+            <option value="Steuerberater">
+            <option value="Steuerfachangestellter">
+            <option value="Lohnbuchhalter">
+            <option value="Bilanzbuchhalter">
+            <option value="Steuerfachwirt">
+            <option value="Finanzbuchhalter">
+            <option value="Kanzleimanager">
+        </datalist>
 
-        <div class="user-profile">
-            <div class="avatar"></div>
-            <div class="user-info">
-                <span class="user-name">Moritz Bäuerlein</span>
-                <span class="user-role">Entwickler</span>
-            </div>
+        <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ" style="width: 130px;">
+
+        <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis" style="width: 110px;">
+        <datalist id="distanzOptions">
+            <option value="0 km (Vor Ort)">
+            <option value="10 km">
+            <option value="20 km">
+            <option value="30 km">
+            <option value="40 km">
+            <option value="50 km">
+        </datalist>
+
+        <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10" style="width: 80px;">
+        <datalist id="anzahlOptions">
+            <option value="5">
+            <option value="10">
+        </datalist>
+
+        <button class="btn-primary" id="searchBtn">Suchen</button>
+    </div>
+
+    <div class="topbar-filters" id="filters-gesetze">
         </div>
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-        <!-- TOPBAR -->
-        <header class="topbar">
-            <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
-            
-            <!-- Dynamische Filter-Container (Wechseln je nach App) -->
-            <div class="topbar-filters active-filters" id="filters-mitarbeiter">
-                <input type="text" id="jobFilter" class="filter-input" placeholder="Job (z.B. Lohnbuchhalter)" style="width: 200px;">
-                <input type="text" id="distanzFilter" class="filter-input" placeholder="Ort / PLZ" style="width: 150px;">
-                <input type="number" id="anzahlFilter" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10" style="width: 80px;">
-                <button class="btn-primary" id="searchBtn">Suchen</button>
-            </div>
-
-            <div class="topbar-filters" id="filters-gesetze">
-                <!-- Hier könnten später Filter für das Gesetzes-Radar stehen -->
-            </div>
-        </header>
-
-        <!-- CONTENT AREA (Hier liegen die verschiedenen Views) -->
-        <div class="content-area">
-            
-            <!-- VIEW 1: Mitarbeitersuche -->
-            <div id="view-mitarbeiter" class="app-view active-view">
-                <div id="loader" class="loader-container">
-                    <div class="spinner"></div>
-                    <p class="loader-text">n8n durchsucht das Web...</p>
-                </div>
-                <div id="resultsGrid" class="results-grid"></div>
-            </div>
-
-            <!-- VIEW 2: Gesetzes-Radar -->
-            <div id="view-gesetze" class="app-view">
-                <p style="color: #6B7280; margin-top: 20px;">Dieses Modul befindet sich noch in der Entwicklung.</p>
-            </div>
-
-        </div>
-    </main>
-
-    <!-- Skripte am Ende laden -->
-    <script src="js/navigation.js"></script>
-    <script src="js/app-mitarbeiter.js"></script>
-</body>
-</html>
+</header>

@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commoda Tools Hub</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#8B5CF6">
 </head>
 <body>
 
@@ -106,5 +108,14 @@
 
     <script src="js/navigation.js"></script>
     <script src="js/app-mitarbeiter.js"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker registriert!', reg))
+                .catch(err => console.error('Service Worker Fehler:', err));
+        });
+    }
+    </script>
 </body>
 </html>

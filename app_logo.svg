@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Wellen-Schnitt aus dem Original-Logo -->
+    <clipPath id="wave">
+      <path d="M0,265 Q128,245 256,265 T512,265 L512,0 L0,0 Z" />
+    </clipPath>
+
+    <!-- KI-Gradient (Verbindet Commoda-Türkis mit deinem App-Lila) -->
+    <linearGradient id="aiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#16B3B8" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+  </defs>
+
+  <!-- App-Icon Hintergrund (Weiß, abgerundete Ecken wie bei iOS) -->
+  <rect width="512" height="512" rx="115" fill="#FFFFFF" />
+
+  <!-- Basis-Logo (Dunkelblau der unteren Logo-Hälfte) -->
+  <g fill="#06597B">
+    <!-- Der äußere O-Ring -->
+    <path d="M256,130 A126,126 0 1,0 382,256 A126.15,126.15 0 0,0 256,130 Z M256,346 A90,90 0 1,1 346,256 A90.11,90.11 0 0,1 256,346 Z" />
+    <!-- Das Plus in der Mitte -->
+    <path d="M276,236 V186 H236 V236 H186 V276 H236 V326 H276 V276 H326 V236 Z" />
+  </g>
+
+  <!-- Top-Hälfte mit Welle (Helles Türkis der oberen Logo-Hälfte) -->
+  <g fill="#16B3B8" clip-path="url(#wave)">
+    <path d="M256,130 A126,126 0 1,0 382,256 A126.15,126.15 0 0,0 256,130 Z M256,346 A90,90 0 1,1 346,256 A90.11,90.11 0 0,1 256,346 Z" />
+    <path d="M276,236 V186 H236 V236 H186 V276 H236 V326 H276 V276 H326 V236 Z" />
+  </g>
+
+  <!-- AI Sparkles / Funken -->
+  <!-- Großer KI-Funke oben rechts (mit Gradient ins Lila) -->
+  <path d="M410,95 Q410,135 450,135 Q410,135 410,175 Q410,135 370,135 Q410,135 410,95 Z" fill="url(#aiGradient)" />
+  
+  <!-- Mittlerer Funke unten links -->
+  <path d="M120,380 Q120,405 145,405 Q120,405 120,430 Q120,405 95,405 Q120,405 120,380 Z" fill="url(#aiGradient)" />
+  
+  <!-- Kleiner Funke oben links (Türkis) -->
+  <path d="M100,140 Q100,155 115,155 Q100,155 100,170 Q100,155 85,155 Q100,155 100,140 Z" fill="#16B3B8" />
+
+</svg>

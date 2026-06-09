@@ -67,7 +67,7 @@ function startSearch() {
         anzahl: anzahl
     };
 
-    const webhookUrl = 'https://dev.baeuerlein-dev.de/webhook-test/mitarbeitersuche'; // <-- Prüfe, ob hier 'dev' oder 'n8n' deine richtige Subdomain ist
+    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook-test/mitarbeitersuche'; // <-- Prüfe, ob hier 'dev' oder 'n8n' deine richtige Subdomain ist
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

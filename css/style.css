@@ -119,6 +119,23 @@ body {
 }
 .btn-primary:hover { background-color: var(--primary-hover); }
 
+/* --- NEUER SECONDARY BUTTON --- */
+.btn-secondary {
+    background-color: var(--surface-color);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.btn-secondary:hover {
+    background-color: var(--bg-color);
+    border-color: #9CA3AF;
+}
+
 /* --- LISTEN-ANSICHT --- */
 .results-list { display: flex; flex-direction: column; gap: 16px; }
 
@@ -126,29 +143,43 @@ body {
     background-color: var(--surface-color);
     border-radius: 12px;
     padding: 20px 24px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); /* Sichtbarer Schatten */
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
     border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
+    flex-wrap: wrap; /* Erlaubt Umbruch, falls das Fenster extrem klein wird */
     transition: transform 0.2s, box-shadow 0.2s;
 }
 .candidate-row:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
 
-.row-left { display: flex; align-items: center; gap: 16px; width: 35%; }
-.row-middle { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-.card-avatar { width: 48px; height: 48px; border-radius: 8px; background-color: var(--active-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 1px solid var(--border-color); }
+/* --- FIX FÜR DAS ZUSAMMENDRÜCKEN --- */
+.row-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+    flex: 2; /* Nimmt sich mehr Platz */
+    min-width: 350px; /* Verhindert das extreme Quetschen der langen Texte */
+}
+.row-middle { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+    min-width: 200px; /* Platz für den Ort */
+}
+.card-avatar { width: 48px; height: 48px; border-radius: 8px; background-color: var(--active-bg); color: var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 1px solid var(--border-color); flex-shrink: 0; }
 
 /* --- ACTION LINKS --- */
-.action-links { display: flex; gap: 12px; align-items: center; }
+.action-links { 
+    display: flex; 
+    gap: 12px; 
+    align-items: center; 
+    flex-shrink: 0; /* Die Buttons rechts dürfen niemals schrumpfen */
+}
 .icon-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-color); color: var(--text-main); display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: 700; font-size: 16px; transition: all 0.2s; border: 1px solid var(--border-color); }
 .icon-btn:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); transform: scale(1.08); }
-
-/* --- LOADER --- */
-.loader-container { display: none; flex-direction: column; align-items: center; justify-content: center; height: 200px; gap: 16px; }
-.spinner { width: 40px; height: 40px; border: 4px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
 
 .add-btn {
     width: 40px; height: 40px; border-radius: 50%;
@@ -158,14 +189,14 @@ body {
 }
 .add-btn:hover { background: var(--primary-color); color: white; }
 
-/* Diese Klasse ersetzt deine langen Inline-Styles */
+/* --- GESPEICHERT BUTTON (TOPNAV) --- */
 .btn-saved {
-    background-color: #4F46E5 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    background-color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 8px;
-    height: 42px; /* Identische Höhe wie deine Filter-Inputs */
+    height: 42px; /* Exakt gleiche Höhe wie die Input-Felder */
     padding: 0 20px;
     margin: 0;
     color: white;
@@ -173,4 +204,11 @@ body {
     font-weight: 600;
     border: none;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-saved:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }

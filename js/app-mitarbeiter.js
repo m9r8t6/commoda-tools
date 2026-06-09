@@ -59,7 +59,7 @@ function startSearch() {
 
     console.log("Sende Daten an n8n:", payload);
 
-    const webhookUrl = 'https://c1eb0836336c0b.lhr.life/webhook-test/mitarbeitersuche';
+    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook-test/mitarbeitersuche';
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

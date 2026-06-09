@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.addEventListener('click', startSearch);
     }
 
-    // Datalist Fix (Zeigt immer alle Optionen beim Klicken)
+    // Datalist Fix
     const datalistInputs = document.querySelectorAll('input[list]');
     datalistInputs.forEach(input => {
         input.addEventListener('focus', function() {
@@ -15,6 +15,16 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener('blur', function() {
             if (this.value === '') {
                 this.value = this.dataset.oldValue || '';
+            }
+        });
+    });
+
+    // Sidebar Fix: Wenn in der Sidebar wieder auf "Mitarbeitersuche" geklickt wird, Filter zurückholen
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const target = e.currentTarget.getAttribute('data-target');
+            if(target === 'mitarbeiter') {
+                goToSearch();
             }
         });
     });
@@ -57,9 +67,7 @@ function startSearch() {
         anzahl: anzahl
     };
 
-    console.log("Sende Daten an n8n:", payload);
-
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook-test/mitarbeitersuche';
+    const webhookUrl = 'https://dev.baeuerlein-dev.de/webhook-test/mitarbeitersuche'; // <-- Prüfe, ob hier 'dev' oder 'n8n' deine richtige Subdomain ist
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -75,13 +83,13 @@ function startSearch() {
 }
 
 function renderResults(dataArray) {
+    // Array speichern, damit wir es später filtern können
     sessionStorage.setItem('searchResults', JSON.stringify(dataArray));
     
     const resultsContainer = document.getElementById('resultsGrid');
     resultsContainer.className = 'results-list';
     resultsContainer.innerHTML = '';
     
-    // UI nach erfolgreichem Empfang zurücksetzen
     resetUI();
 
     if (!dataArray || dataArray.length === 0) {
@@ -89,13 +97,22 @@ function renderResults(dataArray) {
         return;
     }
     
-    dataArray.forEach((person, index) => {
-        // Sicherstellen, dass ein Name für die Initialen existiert
+    // NEU: Lade bereits gespeicherte Profile
+    const saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+    
+    // NEU: Filtere Profile heraus, die bereits gespeichert sind
+    const filteredData = dataArray.filter(person => !saved.find(c => c.url === person.url));
+
+    if (filteredData.length === 0) {
+        resultsContainer.innerHTML = '<p style="color: #10B981; margin-top: 20px;">Alle gefundenen Profile in dieser Suche wurden bereits gespeichert!</p>';
+        return;
+    }
+
+    filteredData.forEach((person) => {
         const initials = person.name && person.name !== 'null'
             ? person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase()
             : '??';
         
-        // Hilfsfunktion: Prüft auf Existenz, echten Inhalt und schließt den n8n-String 'null' aus
         const cleanValue = (val) => (val && val !== 'null' && val !== null) ? val : 'nicht gefunden';
         
         const displayName = cleanValue(person.name);
@@ -105,7 +122,6 @@ function renderResults(dataArray) {
         
         let actionsHTML = ``;
         
-        // BEDINGTES RENDERING: Buttons erscheinen nur, wenn der Wert existiert und ungleich 'null' ist
         if (person.email && person.email !== 'null' && person.email !== null) {
             actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren">✉️</button>`;
         }
@@ -113,9 +129,9 @@ function renderResults(dataArray) {
             actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen">🔗</a>`;
         }
         
-        actionsHTML += `<button onclick="saveCandidate(${index})" class="add-btn" title="Speichern">+</button>`;
+        // NEU: Wir übergeben jetzt die URL statt den Index
+        actionsHTML += `<button onclick="saveCandidateByUrl('${person.url}')" class="add-btn" title="Speichern">+</button>`;
 
-        // Ausgabe inklusive dem neuen Typ (z. B. Freelancer / Kanzleiname)
         resultsContainer.innerHTML += `
             <div class="candidate-row">
                 <div class="row-left">
@@ -144,19 +160,22 @@ function resetUI() {
     }
 }
 
+// NEU: Speichert anhand der URL und entfernt das Element sofort
+function saveCandidateByUrl(url) {
+    const results = JSON.parse(sessionStorage.getItem('searchResults') || '[]');
+    const candidate = results.find(c => c.url === url);
+    
+    if(!candidate) return;
 
-function saveCandidate(personIndex) {
-    const results = JSON.parse(sessionStorage.getItem('searchResults'));
-    const candidate = results[personIndex];
     let saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
     
     if(!saved.find(c => c.url === candidate.url)) {
         saved.push(candidate);
         localStorage.setItem('savedCandidates', JSON.stringify(saved));
-        updateSavedCount(); // NEU: Zähler sofort aktualisieren
-        alert("Kandidat gespeichert!");
-    } else {
-        alert("Dieser Kandidat ist bereits gespeichert.");
+        updateSavedCount(); 
+        
+        // Liste sofort neu rendern (gefiltert ohne den gerade gespeicherten)
+        renderResults(results); 
     }
 }
 
@@ -165,30 +184,45 @@ function copyEmail(email) {
     alert("E-Mail kopiert: " + email);
 }
 
-// --- GESPEICHERT MODUL LOGIK ---
+// --- NAVIGATION & GESPEICHERT MODUL LOGIK ---
 
-// 1. Event-Listener für den neuen Topnav-Button
+// NEU: Funktion um verlässlich zur Suche zurückzukehren
+function goToSearch() {
+    // Ansichten umschalten
+    document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active-view'));
+    document.getElementById('view-mitarbeiter').classList.add('active-view');
+    
+    // Sidebar-Highlight wieder auf Mitarbeitersuche setzen
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const mitarbeiterTab = document.querySelector('.nav-item[data-target="mitarbeiter"]');
+    if(mitarbeiterTab) mitarbeiterTab.classList.add('active');
+
+    // Filter wieder einblenden und Titel zurücksetzen
+    document.getElementById('filters-mitarbeiter').style.display = 'flex';
+    document.getElementById('appTitle').innerText = "Mitarbeitersuche";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    updateSavedCount(); // Zähler beim Start laden
+    updateSavedCount();
 
     const savedBtn = document.getElementById('nav-saved-btn');
     if (savedBtn) {
         savedBtn.addEventListener('click', () => {
-            // Ansichten umschalten
             document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active-view'));
             document.getElementById('view-saved').classList.add('active-view');
+            
+            // Sidebar-Highlight entfernen
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             
             // Filter ausblenden & Titel ändern
             document.getElementById('filters-mitarbeiter').style.display = 'none';
             document.getElementById('appTitle').innerText = "Gespeicherte Profile";
             
-            // Daten rendern
             renderSavedCandidates();
         });
     }
 });
 
-// 2. Funktion zum Rendern der gespeicherten Liste
 function renderSavedCandidates() {
     const savedGrid = document.getElementById('savedGrid');
     const saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
@@ -211,7 +245,6 @@ function renderSavedCandidates() {
         if (person.url && person.url !== 'null') {
             actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen">🔗</a>`;
         }
-        // Neuer Löschen-Button (Mülleimer)
         actionsHTML += `<button onclick="removeCandidate('${person.url}')" class="icon-btn" style="color: #EF4444;" title="Löschen">🗑️</button>`;
 
         savedGrid.innerHTML += `
@@ -232,25 +265,21 @@ function renderSavedCandidates() {
     });
 }
 
-// 3. Funktion zum Löschen eines Profils
 function removeCandidate(url) {
     let saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
-    // Alle Profile behalten, die NICHT diese URL haben
     saved = saved.filter(c => c.url !== url);
     localStorage.setItem('savedCandidates', JSON.stringify(saved));
     
     updateSavedCount();
-    renderSavedCandidates(); // Liste sofort aktualisieren
+    renderSavedCandidates(); 
 }
 
-// 4. Funktion zum Aktualisieren des Zählers oben rechts
 function updateSavedCount() {
     const saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
     const countBadge = document.getElementById('saved-count');
     if (countBadge) countBadge.innerText = saved.length;
 }
 
-// --- NEU: CSV EXPORT FUNKTION ---
 function exportCSV() {
     const saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
     
@@ -259,22 +288,15 @@ function exportCSV() {
         return;
     }
 
-    // 1. UTF-8 BOM hinzufügen, damit Microsoft Excel Umlaute (ä,ö,ü) richtig erkennt!
     let csvContent = "\uFEFF";
-    
-    // 2. Kopfzeile (Header) anlegen, getrennt mit Semikolon für das europäische Excel
     csvContent += "Name;Rolle;Status;Ort;Profil-Link;E-Mail\n";
 
-    // 3. Daten durchgehen und Zeile für Zeile anhängen
     saved.forEach(person => {
-        // Hilfsfunktion: Wandelt fehlende Daten in "nicht gefunden" um und schützt vor Fehlern
         const clean = (val) => {
             if (!val || val === 'null') return 'nicht gefunden';
-            // Falls in der Rolle ein Anführungszeichen steht, wird es escapt
             return val.replace(/"/g, '""'); 
         };
 
-        // Einzelne Spalten bauen und in Anführungszeichen setzen (schützt vor Kommas im Text)
         const row = [
             `"${clean(person.name)}"`,
             `"${clean(person.role)}"`,
@@ -284,11 +306,9 @@ function exportCSV() {
             `"${clean(person.email)}"`
         ];
 
-        // Zeile mit Semikolons zusammensetzen und Zeilenumbruch anhängen
         csvContent += row.join(";") + "\n";
     });
 
-    // 4. Virtuelle Datei erzeugen und Download triggern
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
@@ -296,6 +316,6 @@ function exportCSV() {
     link.setAttribute("href", url);
     link.setAttribute("download", "commoda_kandidaten_pipeline.csv");
     document.body.appendChild(link);
-    link.click(); // Automatischer Klick löst den Download aus
-    document.body.removeChild(link); // Aufräumen
+    link.click(); 
+    document.body.removeChild(link); 
 }

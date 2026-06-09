@@ -41,14 +41,15 @@ body {
 }
 
 .topbar {
-    height: 72px;
+    min-height: 72px;            /* Flexibel bleiben, falls Platz eng wird */
     background-color: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* ÄNDERUNG: Schiebt Elemente nach links zum Titel */
-    gap: 40px;                   /* Abstand zwischen Titel und dem Filter-Block */
-    padding: 0 40px;
+    justify-content: space-between; /* Verteilt Titel (L), Filter (M) und Button (R) */
+    flex-wrap: wrap;             /* Erlaubt sanften Umbruch auf kleinen Monitoren */
+    gap: 20px;
+    padding: 16px 40px;
 }
 
 .content-area {

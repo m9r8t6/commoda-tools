@@ -60,14 +60,21 @@ function startSearch() {
     searchBtn.innerText = "Sucht...";
     searchBtn.disabled = true;
 
+    // --- NEU: Blacklist erstellen ---
+    // Wir holen deine gespeicherten Kandidaten und extrahieren nur deren URLs
+    const saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+    const blacklistUrls = saved.map(person => person.url).filter(url => url && url !== 'null');
+
+    // Wir fügen die Blacklist in den Payload für n8n ein
     const payload = {
         jobtitel: job,
         ort: ort,
         distanz: distanz || "0 km (Vor Ort)",
-        anzahl: anzahl
+        anzahl: anzahl,
+        blacklist: blacklistUrls 
     };
 
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook-test/mitarbeitersuche'; // <-- Prüfe, ob hier 'dev' oder 'n8n' deine richtige Subdomain ist
+    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook-test/mitarbeitersuche'; // <-- Prüfe deine Domain
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

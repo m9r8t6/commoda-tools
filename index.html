@@ -36,50 +36,52 @@
     </aside>
 
     <main class="main-content">
-        <header class="topbar" style="display: flex; justify-content: space-between; align-items: center;">
-            <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
-            
-            <button id="nav-saved-btn" class="btn-primary" style="background-color: #4F46E5; display: flex; align-items: center; gap: 8px;">
-                <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
-                Gespeichert (<span id="saved-count">0</span>)
-            </button>
-        </header>
-
-        <div class="topbar-filters active-filters" id="filters-mitarbeiter" style="margin-bottom: 20px;">
-            <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
-            <datalist id="jobOptions">
-                <option value="Steuerberater">Steuerberater</option>
-                <option value="Steuerfachangestellter">Steuerfachangestellter</option>
-                <option value="Lohnbuchhalter">Lohnbuchhalter</option>
-                <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
-                <option value="Steuerfachwirt">Steuerfachwirt</option>
-                <option value="Finanzbuchhalter">Finanzbuchhalter</option>
-                <option value="Kanzleimanager">Kanzleimanager</option>
-            </datalist>
-
-            <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
-
-            <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
-            <datalist id="distanzOptions">
-                <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
-                <option value="10 km">10 km</option>
-                <option value="20 km">20 km</option>
-                <option value="30 km">30 km</option>
-                <option value="40 km">40 km</option>
-                <option value="50 km">50 km</option>
-            </datalist>
-
-            <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
-            <datalist id="anzahlOptions">
-                <option value="5">5 Ergebnisse</option>
-                <option value="10">10 Ergebnisse</option>
-            </datalist>
-
-            <button class="btn-primary" id="searchBtn">Suchen</button>
-        </div>
-
-        <div class="topbar-filters" id="filters-gesetze" style="display: none;">
+        <header class="topbar">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1 class="page-title" id="appTitle" style="margin: 0;">Mitarbeitersuche</h1>
+                
+                <button id="nav-saved-btn" class="btn-primary" style="background-color: #4F46E5; display: flex; align-items: center; gap: 8px;">
+                    <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                    Gespeichert (<span id="saved-count">0</span>)
+                </button>
             </div>
+
+            <div class="topbar-filters active-filters" id="filters-mitarbeiter">
+                <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
+                <datalist id="jobOptions">
+                    <option value="Steuerberater">Steuerberater</option>
+                    <option value="Steuerfachangestellter">Steuerfachangestellter</option>
+                    <option value="Lohnbuchhalter">Lohnbuchhalter</option>
+                    <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
+                    <option value="Steuerfachwirt">Steuerfachwirt</option>
+                    <option value="Finanzbuchhalter">Finanzbuchhalter</option>
+                    <option value="Kanzleimanager">Kanzleimanager</option>
+                </datalist>
+
+                <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
+
+                <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
+                <datalist id="distanzOptions">
+                    <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
+                    <option value="10 km">10 km</option>
+                    <option value="20 km">20 km</option>
+                    <option value="30 km">30 km</option>
+                    <option value="40 km">40 km</option>
+                    <option value="50 km">50 km</option>
+                </datalist>
+
+                <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
+                <datalist id="anzahlOptions">
+                    <option value="5">5 Ergebnisse</option>
+                    <option value="10">10 Ergebnisse</option>
+                </datalist>
+
+                <button class="btn-primary" id="searchBtn">Suchen</button>
+            </div>
+
+            <div class="topbar-filters" id="filters-gesetze" style="display: none;">
+                </div>
+        </header>
 
         <div class="content-area">
             

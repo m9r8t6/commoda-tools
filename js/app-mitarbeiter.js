@@ -4,50 +4,43 @@ document.addEventListener("DOMContentLoaded", () => {
         searchBtn.addEventListener('click', startSearch);
     }
 
-    // --- NEU: Datalist Fix (Zeigt immer alle Optionen beim Klicken) ---
+    // Datalist Fix (Zeigt immer alle Optionen beim Klicken)
     const datalistInputs = document.querySelectorAll('input[list]');
     datalistInputs.forEach(input => {
-        // Wenn das Feld angeklickt wird: Aktuellen Wert merken und Feld leeren
         input.addEventListener('focus', function() {
             this.dataset.oldValue = this.value; 
             this.value = ''; 
         });
 
-        // Wenn man woanders hinklickt: Alten Wert wiederherstellen, falls es leer blieb
         input.addEventListener('blur', function() {
             if (this.value === '') {
                 this.value = this.dataset.oldValue || '';
             }
         });
     });
-    // ----------------------------------------------------------------
 });
 
 function startSearch() {
-    // 1. Werte aus den neuen Feldern auslesen
     const job = document.getElementById('jobFilter').value;
     const ort = document.getElementById('ortFilter').value;
     const distanz = document.getElementById('distanzFilter').value;
     let anzahl = document.getElementById('anzahlFilter').value;
 
-    // 2. Basis-Validierung (Job und Ort sind Pflicht)
     if(!job || !ort) {
         alert("Bitte mindestens den Job und den Ort ausfüllen!");
         return;
     }
 
-    // 3. Sicherheits-Check für die Anzahl (Maximal 10 erlauben)
     anzahl = parseInt(anzahl);
     if (anzahl > 10) {
         anzahl = 10;
         document.getElementById('anzahlFilter').value = 10;
-        alert("Sicherheitslimit: Es werden maximal 10 Ergebnisse gesucht, um Server-Timeouts zu vermeiden.");
+        alert("Sicherheitslimit: Es werden maximal 10 Ergebnisse gesucht.");
     } else if (anzahl < 1 || isNaN(anzahl)) {
-        anzahl = 5; // Fallback, falls jemand Quatsch eingibt
+        anzahl = 5;
         document.getElementById('anzahlFilter').value = 5;
     }
 
-    // UI auf Ladezustand setzen
     const resultsGrid = document.getElementById('resultsGrid');
     const loader = document.getElementById('loader');
     const searchBtn = document.getElementById('searchBtn');
@@ -57,17 +50,15 @@ function startSearch() {
     searchBtn.innerText = "Sucht...";
     searchBtn.disabled = true;
 
-    // 4. Payload für n8n (inklusive dem neuen Distanz-Filter)
     const payload = {
         jobtitel: job,
         ort: ort,
-        distanz: distanz || "0 km (Vor Ort)", // Standardwert, falls leer gelassen
+        distanz: distanz || "0 km (Vor Ort)",
         anzahl: anzahl
     };
 
     console.log("Sende Daten an n8n:", payload);
 
-    //FETCH CALL 
     const webhookUrl = 'https://c1eb0836336c0b.lhr.life/webhook-test/mitarbeitersuche';
     fetch(webhookUrl, {
         method: 'POST',
@@ -82,43 +73,60 @@ function startSearch() {
         resetUI();
     });
 }
-ok 
 
 function renderResults(dataArray) {
-    // Ergebnisse für später speichern (für den Speicher-Button)
     sessionStorage.setItem('searchResults', JSON.stringify(dataArray));
     
     const resultsContainer = document.getElementById('resultsGrid');
     resultsContainer.className = 'results-list';
     resultsContainer.innerHTML = '';
     
+    // UI nach erfolgreichem Empfang zurücksetzen
+    resetUI();
+
+    if (!dataArray || dataArray.length === 0) {
+        resultsContainer.innerHTML = '<p style="color: #6B7280; margin-top: 20px;">Keine passenden Profile gefunden.</p>';
+        return;
+    }
+    
     dataArray.forEach((person, index) => {
-        const initials = person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+        // Sicherstellen, dass ein Name für die Initialen existiert
+        const initials = person.name && person.name !== 'null'
+            ? person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase()
+            : '??';
+        
+        // Hilfsfunktion: Prüft auf Existenz, echten Inhalt und schließt den n8n-String 'null' aus
+        const cleanValue = (val) => (val && val !== 'null' && val !== null) ? val : 'nicht gefunden';
+        
+        const displayName = cleanValue(person.name);
+        const displayRole = cleanValue(person.role);
+        const displayLocation = cleanValue(person.location);
+        const displayEmployment = cleanValue(person.employment_type);
         
         let actionsHTML = ``;
         
-        // Bedingtes Rendering: Nur anzeigen, wenn Daten vorhanden
-        if (person.email) {
+        // BEDINGTES RENDERING: Buttons erscheinen nur, wenn der Wert existiert und ungleich 'null' ist
+        if (person.email && person.email !== 'null' && person.email !== null) {
             actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren">✉️</button>`;
         }
-        if (person.url) {
-            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn">🔗</a>`;
+        if (person.url && person.url !== 'null' && person.url !== null) {
+            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen">🔗</a>`;
         }
         
-        // Add Button
         actionsHTML += `<button onclick="saveCandidate(${index})" class="add-btn" title="Speichern">+</button>`;
 
+        // Ausgabe inklusive dem neuen Typ (z. B. Freelancer / Kanzleiname)
         resultsContainer.innerHTML += `
             <div class="candidate-row">
                 <div class="row-left">
                     <div class="card-avatar">${initials}</div>
                     <div class="card-info">
-                        <h3>${person.name}</h3>
-                        <p>${person.role}</p>
+                        <h3>${displayName}</h3>
+                        <p><strong>${displayRole}</strong> <span class="status-badge" style="font-size: 0.85em; color: #6B7280;">(${displayEmployment})</span></p>
                     </div>
                 </div>
                 <div class="row-middle">
-                    <span>📍 ${person.location}</span>
+                    <span>📍 ${displayLocation}</span>
                 </div>
                 <div class="action-links">${actionsHTML}</div>
             </div>
@@ -127,19 +135,20 @@ function renderResults(dataArray) {
 }
 
 function resetUI() {
-    document.getElementById('loader').style.display = 'none';
+    const loader = document.getElementById('loader');
+    if(loader) loader.style.display = 'none';
     const searchBtn = document.getElementById('searchBtn');
-    searchBtn.innerText = "Suchen";
-    searchBtn.disabled = false;
+    if(searchBtn) {
+        searchBtn.innerText = "Suchen";
+        searchBtn.disabled = false;
+    }
 }
 
-// --- NEUE FUNKTION: Speichern ---
 function saveCandidate(personIndex) {
     const results = JSON.parse(sessionStorage.getItem('searchResults'));
     const candidate = results[personIndex];
     let saved = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
     
-    // Verhindere Duplikate
     if(!saved.find(c => c.url === candidate.url)) {
         saved.push(candidate);
         localStorage.setItem('savedCandidates', JSON.stringify(saved));
@@ -147,7 +156,6 @@ function saveCandidate(personIndex) {
     }
 }
 
-// --- NEUE FUNKTION: E-Mail kopieren ---
 function copyEmail(email) {
     navigator.clipboard.writeText(email);
     alert("E-Mail kopiert: " + email);

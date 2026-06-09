@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commoda Tools Hub</title>
-    <!-- CSS einbinden -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar">
         <div class="brand">
             <div class="brand-icon">C</div>
@@ -17,7 +15,6 @@
         </div>
         
         <nav class="nav-menu">
-            <!-- Navigationselemente mit data-Attributen für das JavaScript -->
             <a href="#" class="nav-item active" data-target="mitarbeiter" data-title="Mitarbeitersuche">
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Mitarbeitersuche
@@ -26,6 +23,11 @@
             <a href="#" class="nav-item" data-target="gesetze" data-title="Gesetzes-Radar">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                 Gesetzes-Radar
+            </a>
+
+            <a href="#" class="nav-item" data-target="saved" data-title="Gespeicherte Profile">
+                <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                Gespeichert
             </a>
         </nav>
 
@@ -38,15 +40,11 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- TOPBAR -->
         <header class="topbar">
             <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
             
-            <!-- Dynamische Filter-Container -->
             <div class="topbar-filters active-filters" id="filters-mitarbeiter">
-                
                 <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
                 <datalist id="jobOptions">
                     <option value="Steuerberater">Steuerberater</option>
@@ -80,41 +78,30 @@
             </div>
 
             <div class="topbar-filters" id="filters-gesetze">
-                <!-- Hier könnten später Filter für das Gesetzes-Radar stehen -->
-            </div>
+                </div>
         </header>
 
-        <!-- CONTENT AREA (Hier liegen die verschiedenen Views) -->
         <div class="content-area">
             
-            <!-- VIEW 1: Mitarbeitersuche -->
             <div id="view-mitarbeiter" class="app-view active-view">
-                <div id="loader" class="loader-container">
+                <div id="loader" class="loader-container" style="display: none;">
                     <div class="spinner"></div>
                     <p class="loader-text">n8n durchsucht das Web...</p>
                 </div>
                 <div id="resultsGrid" class="results-grid"></div>
             </div>
 
-            <!-- VIEW 2: Gesetzes-Radar -->
             <div id="view-gesetze" class="app-view">
                 <p style="color: #6B7280; margin-top: 20px;">Dieses Modul befindet sich noch in der Entwicklung.</p>
             </div>
 
-        </div>
-
-        <a href="#" class="nav-item" data-target="saved" data-title="Gespeicherte Profile">
-            <svg viewBox="0 0 24 24"><path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
-            Gespeichert
-        </a>
-
-        <div id="view-saved" class="app-view">
-            <div id="savedGrid" class="results-list"></div>
-        </div>  
+            <div id="view-saved" class="app-view">
+                <div id="savedGrid" class="results-list"></div>
+            </div>  
               
+        </div>
     </main>
 
-    <!-- Skripte am Ende laden -->
     <script src="js/navigation.js"></script>
     <script src="js/app-mitarbeiter.js"></script>
 </body>

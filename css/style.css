@@ -260,6 +260,9 @@ body {
     margin: 0 auto;
     width: 100%;
 }
+#view-diplomat .tool-container {
+    max-width: 1400px;
+}
 .tool-title-desc {
     margin-bottom: 24px;
 }

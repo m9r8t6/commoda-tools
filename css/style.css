@@ -326,6 +326,12 @@ body {
     gap: 16px;
     margin-bottom: 20px;
 }
+.form-row-3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
 
 /* Split Pane Layout (Diplomat) */
 .split-pane {
@@ -690,6 +696,10 @@ body {
     }
     
     .form-row-2col {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .form-row-3col {
         grid-template-columns: 1fr;
         gap: 12px;
     }

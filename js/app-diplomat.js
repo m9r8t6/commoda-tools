@@ -39,10 +39,12 @@ function rewriteText() {
     translateBtn.disabled = true;
     translateBtn.innerText = "Schreibt um...";
 
+    const language = document.getElementById('diplomatLanguage').value;
     const payload = { 
         text: inputText,
         sender: senderName,
-        recipient: recipientName
+        recipient: recipientName,
+        language: language
     };
     const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/aidiplomat';
 

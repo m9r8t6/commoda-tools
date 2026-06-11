@@ -1,12 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     const translateBtn = document.getElementById('translateBtn');
     const copyBtn = document.getElementById('copyDiplomatBtn');
+    const copySubjectBtn = document.getElementById('copyDiplomatSubjectBtn');
     
     if (translateBtn) {
         translateBtn.addEventListener('click', rewriteText);
     }
     if (copyBtn) {
         copyBtn.addEventListener('click', copyRewrittenText);
+    }
+    if (copySubjectBtn) {
+        copySubjectBtn.addEventListener('click', copySubjectText);
     }
 });
 
@@ -22,12 +26,15 @@ function rewriteText() {
 
     const loader = document.getElementById('diplomatLoader');
     const outputBox = document.getElementById('diplomatOutput');
+    const subjectBox = document.getElementById('diplomatSubject');
     const translateBtn = document.getElementById('translateBtn');
     const copyBtn = document.getElementById('copyDiplomatBtn');
+    const copySubjectBtn = document.getElementById('copyDiplomatSubjectBtn');
 
-    outputBox.classList.add('placeholder');
-    outputBox.innerText = "Die diplomatische Antwort erscheint hier...";
+    subjectBox.value = "";
+    outputBox.value = "";
     copyBtn.disabled = true;
+    copySubjectBtn.disabled = true;
     loader.style.display = 'flex';
     translateBtn.disabled = true;
     translateBtn.innerText = "Schreibt um...";
@@ -48,22 +55,14 @@ function rewriteText() {
         if (!response.ok) {
             throw new Error("Fehler bei der Serverantwort");
         }
-        return response.text().then(text => {
-            try {
-                const json = JSON.parse(text);
-                return json.rewritten || json.text || text;
-            } catch(e) {
-                return text;
-            }
-        });
+        return response.text();
     })
-    .then(rewrittenText => {
-        displayRewrittenText(rewrittenText);
+    .then(rawResponse => {
+        displayRewrittenText(rawResponse);
     })
     .catch(error => {
         console.error("Kanzlei-Diplomat Fehler:", error);
-        outputBox.classList.remove('placeholder');
-        outputBox.innerText = "Fehler: Die Umschreibung konnte nicht durchgeführt werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal.";
+        outputBox.value = "Fehler: Die Umschreibung konnte nicht durchgeführt werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal.";
     })
     .finally(() => {
         loader.style.display = 'none';
@@ -72,20 +71,77 @@ function rewriteText() {
     });
 }
 
-function displayRewrittenText(text) {
+function displayRewrittenText(rawResponse) {
     const outputBox = document.getElementById('diplomatOutput');
+    const subjectBox = document.getElementById('diplomatSubject');
     const copyBtn = document.getElementById('copyDiplomatBtn');
+    const copySubjectBtn = document.getElementById('copyDiplomatSubjectBtn');
 
-    outputBox.classList.remove('placeholder');
-    outputBox.innerText = text;
-    copyBtn.disabled = false;
+    let subject = "";
+    let emailText = "";
+
+    try {
+        const json = JSON.parse(rawResponse);
+        
+        // Handle case where n8n returns an array containing the object
+        if (Array.isArray(json) && json.length > 0) {
+            const firstItem = json[0];
+            subject = firstItem.betreff || "";
+            emailText = firstItem.email_text || firstItem.text || JSON.stringify(firstItem);
+        } else {
+            subject = json.betreff || "";
+            emailText = json.email_text || json.text || rawResponse;
+        }
+    } catch (e) {
+        // Fallback for plain text responses
+        emailText = rawResponse;
+    }
+
+    // Standardize newline characters if escaped
+    if (typeof emailText === 'string') {
+        emailText = emailText.replace(/\\n/g, '\n');
+    }
+    if (typeof subject === 'string') {
+        subject = subject.replace(/\\n/g, '\n');
+    }
+
+    subjectBox.value = subject;
+    outputBox.value = emailText;
+
+    copyBtn.disabled = !emailText;
+    copySubjectBtn.disabled = !subject;
 }
 
 function copyRewrittenText() {
-    const outputText = document.getElementById('diplomatOutput').innerText;
+    const outputText = document.getElementById('diplomatOutput').value;
     const copyBtn = document.getElementById('copyDiplomatBtn');
 
     navigator.clipboard.writeText(outputText)
+        .then(() => {
+            const oldText = copyBtn.innerText;
+            copyBtn.innerText = "Kopiert! ✓";
+            copyBtn.classList.remove('btn-secondary');
+            copyBtn.classList.add('btn-primary');
+            copyBtn.style.backgroundColor = '#10B981'; // Green accent
+            
+            setTimeout(() => {
+                copyBtn.innerText = oldText;
+                copyBtn.classList.remove('btn-primary');
+                copyBtn.classList.add('btn-secondary');
+                copyBtn.style.backgroundColor = '';
+            }, 2000);
+        })
+        .catch(err => {
+            console.error("Fehler beim Kopieren:", err);
+            alert("Kopieren fehlgeschlagen.");
+        });
+}
+
+function copySubjectText() {
+    const subjectText = document.getElementById('diplomatSubject').value;
+    const copyBtn = document.getElementById('copyDiplomatSubjectBtn');
+
+    navigator.clipboard.writeText(subjectText)
         .then(() => {
             const oldText = copyBtn.innerText;
             copyBtn.innerText = "Kopiert! ✓";

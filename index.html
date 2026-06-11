@@ -174,12 +174,22 @@
                         <p class="loader-text">Kanzlei-Diplomat formuliert um...</p>
                     </div>
                     
+                    <!-- Betreff Output Box -->
                     <div class="form-group">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label style="margin-bottom: 0;">Diplomatische Kanzlei-Mail:</label>
+                            <label for="diplomatSubject" style="margin-bottom: 0;">Betreff:</label>
+                            <button class="btn-secondary" id="copyDiplomatSubjectBtn" disabled>Kopieren</button>
+                        </div>
+                        <input type="text" id="diplomatSubject" class="form-input" style="font-weight: 600;" placeholder="Der Betreff erscheint hier...">
+                    </div>
+
+                    <!-- E-Mail Text Output Box -->
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label for="diplomatOutput" style="margin-bottom: 0;">Diplomatische Kanzlei-Mail:</label>
                             <button class="btn-secondary" id="copyDiplomatBtn" disabled>Kopieren</button>
                         </div>
-                        <div id="diplomatOutput" class="output-box placeholder" style="min-height: 200px; padding: 18px; line-height: 1.6;">Die diplomatische Antwort erscheint hier...</div>
+                        <textarea id="diplomatOutput" class="form-textarea" style="min-height: 250px; line-height: 1.6;" placeholder="Die diplomatische Antwort erscheint hier..."></textarea>
                     </div>
                 </div>
             </div>

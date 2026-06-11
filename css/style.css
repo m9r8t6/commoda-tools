@@ -301,6 +301,28 @@ body {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
+.form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+    background-color: var(--surface-color);
+    color: var(--text-main);
+}
+.form-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+.form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
 
 /* Split Pane Layout (Diplomat) */
 .split-pane {
@@ -662,6 +684,11 @@ body {
     #view-sachbezug .tool-container > div {
         grid-template-columns: 1fr !important;
         gap: 32px !important;
+    }
+    
+    .form-row-2col {
+        grid-template-columns: 1fr;
+        gap: 12px;
     }
 }
 

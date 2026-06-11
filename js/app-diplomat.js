@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function rewriteText() {
     const inputText = document.getElementById('diplomatInput').value.trim();
+    const senderName = document.getElementById('diplomatSender').value.trim();
+    const recipientName = document.getElementById('diplomatRecipient').value.trim();
+
     if (!inputText) {
         alert("Bitte gib einen Rohtext ein, der diplomatisch umschrieben werden soll!");
         return;
@@ -29,7 +32,11 @@ function rewriteText() {
     translateBtn.disabled = true;
     translateBtn.innerText = "Schreibt um...";
 
-    const payload = { text: inputText };
+    const payload = { 
+        text: inputText,
+        sender: senderName,
+        recipient: recipientName
+    };
     const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/aidiplomat';
 
     fetch(webhookUrl, {
@@ -55,7 +62,8 @@ function rewriteText() {
     })
     .catch(error => {
         console.error("Kanzlei-Diplomat Fehler:", error);
-        rewriteFallback(inputText);
+        outputBox.classList.remove('placeholder');
+        outputBox.innerText = "Fehler: Die Umschreibung konnte nicht durchgeführt werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später noch einmal.";
     })
     .finally(() => {
         loader.style.display = 'none';
@@ -96,58 +104,4 @@ function copyRewrittenText() {
             console.error("Fehler beim Kopieren:", err);
             alert("Kopieren fehlgeschlagen.");
         });
-}
-
-function rewriteFallback(text) {
-    console.warn("Nutze lokalen Fallback-Umschreiber für den Kanzlei-Diplomaten");
-    
-    // Simples humorvolles / professionelles Regelwerk für Steuerberater-Kanzleien
-    let responseText = "";
-    const lower = text.toLowerCase();
-
-    if (lower.includes("werbungskosten") || lower.includes("belege") || lower.includes("einreichen")) {
-        responseText = 
-`Sehr geehrte Damen und Herren,
-Sehr geehrte(r) Mandant(in),
-
-wir beziehen uns auf Ihre Einkommensteuererklärung für das Jahr 2024. Um eine sachgerechte und für Sie vorteilhafte Erklärung ausarbeiten zu können, benötigen wir noch die entsprechenden Werbungskostenbelege.
-
-Wir bitten höflich darum, uns diese Belege bis zum Ablauf der laufenden Kalenderwoche zukommen zu lassen. Bitte beachten Sie, dass das zuständige Finanzamt andernfalls eine Schätzung der Besteuerungsgrundlagen vornehmen kann, was in der Regel zu steuerlichen Nachteilen führt.
-
-Für Rückfragen stehen wir Ihnen selbstverständlich jederzeit gerne zur Verfügung.
-
-Mit freundlichen Grüßen,
-Ihre Kanzlei commoda`;
-    } else if (lower.includes("zahlen") || lower.includes("rechnung") || lower.includes("honorar")) {
-        responseText =
-`Sehr geehrte(r) Mandant(in),
-
-wir hoffen, es geht Ihnen gut.
-
-Bei der Durchsicht unserer Außenstände haben wir festgestellt, dass unsere Rechnung Nr. [Nummer] vom [Datum] über das erbrachte Honorar in Höhe von [Betrag] EUR bisher nicht ausgeglichen wurde. 
-
-Sicherlich handelt es sich hierbei lediglich um ein Versehen. Wir wären Ihnen dankbar, wenn Sie den offenen Betrag innerhalb der nächsten 7 Tage auf unser Kanzleikonto überweisen würden. Sollten Sie Fragen zur Abrechnung haben, sprechen Sie uns gerne an.
-
-Vielen Dank für Ihre Unterstützung.
-
-Mit freundlichen Grüßen,
-Ihre Kanzlei commoda`;
-    } else {
-        // Generischer höflicher Text
-        responseText = 
-`Sehr geehrte(r) Mandant(in),
-
-wir bedanken uns für das angenehme Telefonat und die gute Zusammenarbeit.
-
-Um die Bearbeitung Ihres laufenden steuerlichen Vorgangs termingerecht fortzuführen und Verzögerungen mit den Finanzbehörden zu vermeiden, bitten wir Sie um zeitnahe Ergänzung der noch ausstehenden Unterlagen bzw. Angaben.
-
-Sobald uns die Informationen vorliegen, werden wir uns unverzüglich an die Fertigstellung machen.
-
-Wir bedanken uns für Ihre Kooperation und verbleiben 
-
-mit freundlichen Grüßen,
-Ihre Kanzlei commoda`;
-    }
-
-    displayRewrittenText(responseText);
 }

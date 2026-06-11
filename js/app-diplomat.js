@@ -30,7 +30,7 @@ function rewriteText() {
     translateBtn.innerText = "Schreibt um...";
 
     const payload = { text: inputText };
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/kanzlei-diplomat';
+    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/aidiplomat';
 
     fetch(webhookUrl, {
         method: 'POST',

@@ -70,48 +70,48 @@
     <main class="main-content">
         <header class="topbar">
             <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
+            
+            <div class="topbar-filters active-filters" id="filters-mitarbeiter">
+                <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
+                <datalist id="jobOptions">
+                    <option value="Steuerberater">Steuerberater</option>
+                    <option value="Steuerfachangestellter">Steuerfachangestellter</option>
+                    <option value="Lohnbuchhalter">Lohnbuchhalter</option>
+                    <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
+                    <option value="Steuerfachwirt">Steuerfachwirt</option>
+                    <option value="Finanzbuchhalter">Finanzbuchhalter</option>
+                    <option value="Kanzleimanager">Kanzleimanager</option>
+                </datalist>
+
+                <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
+
+                <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
+                <datalist id="distanzOptions">
+                    <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
+                    <option value="10 km">10 km</option>
+                    <option value="20 km">20 km</option>
+                    <option value="50 km">50 km</option>
+                </datalist>
+
+                <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
+                <datalist id="anzahlOptions">
+                    <option value="5">5 Ergebnisse</option>
+                    <option value="10">10 Ergebnisse</option>
+                </datalist>
+
+                <button class="btn-primary" id="searchBtn">Suchen</button>
+            </div>
+
+            <button id="nav-saved-btn" class="btn-saved">
+                <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
+                    <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                </svg>
+                Gespeichert (<span id="saved-count">0</span>)
+            </button>
         </header>
 
         <div class="content-area">
             <div id="view-mitarbeiter" class="app-view active-view">
-                <div class="view-filters-container" id="filters-mitarbeiter">
-                    <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
-                    <datalist id="jobOptions">
-                        <option value="Steuerberater">Steuerberater</option>
-                        <option value="Steuerfachangestellter">Steuerfachangestellter</option>
-                        <option value="Lohnbuchhalter">Lohnbuchhalter</option>
-                        <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
-                        <option value="Steuerfachwirt">Steuerfachwirt</option>
-                        <option value="Finanzbuchhalter">Finanzbuchhalter</option>
-                        <option value="Kanzleimanager">Kanzleimanager</option>
-                    </datalist>
-
-                    <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
-
-                    <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
-                    <datalist id="distanzOptions">
-                        <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
-                        <option value="10 km">10 km</option>
-                        <option value="20 km">20 km</option>
-                        <option value="50 km">50 km</option>
-                    </datalist>
-
-                    <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
-                    <datalist id="anzahlOptions">
-                        <option value="5">5 Ergebnisse</option>
-                        <option value="10">10 Ergebnisse</option>
-                    </datalist>
-
-                    <button class="btn-primary" id="searchBtn">Suchen</button>
-
-                    <button id="nav-saved-btn" class="btn-saved" style="margin-left: auto;">
-                        <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
-                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
-                        </svg>
-                        Gespeichert (<span id="saved-count">0</span>)
-                    </button>
-                </div>
-
                 <div id="loader" class="loader-container" style="display: none;">
                     <div class="spinner"></div>
                     <p class="loader-text">n8n durchsucht das Web...</p>
@@ -282,22 +282,9 @@
                 <div class="tool-container">
                     <div class="tool-title-desc">
                         <h2>Kanzlei-Einstellungen</h2>
-                        <p>Konfiguriere hier die Schnittstellen und Parameter für deine Kanzlei-Werkzeuge.</p>
+                        <p>Hier kannst du später kanzleiweite Einstellungen für deine Tools konfigurieren.</p>
                     </div>
-                    <div class="settings-form">
-                        <div class="form-group">
-                            <label for="settingsN8nUrl">n8n Webhook Basis-URL:</label>
-                            <input type="url" id="settingsN8nUrl" class="filter-input" placeholder="https://n8n.baeuerlein-dev.de/webhook" style="width: 100%;">
-                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Die Basis-URL zu deiner n8n Instanz. Der Pfad des jeweiligen Webhooks wird automatisch angehängt (z.B. <code>/mitarbeitersuche</code>).</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-group">
-                                <input type="checkbox" id="settingsFallbackMock" checked>
-                                <span>Lokale Fallback-Mocks aktivieren (wenn n8n offline ist)</span>
-                            </label>
-                        </div>
-                        <button class="btn-primary" id="saveSettingsBtn" style="margin-top: 10px; width: 220px;">Einstellungen speichern</button>
-                    </div>
+                    <p style="color: var(--text-muted); font-style: italic;">Aktuell sind keine konfigurierbaren Einstellungen vorhanden.</p>
                 </div>
             </div>
         </div>

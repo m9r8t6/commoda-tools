@@ -23,9 +23,7 @@ function checkBewirtungsbeleg() {
     checkBtn.innerText = "Prüfe...";
 
     const payload = { text: text };
-    const webhookUrl = typeof getWebhookUrl === 'function' 
-        ? getWebhookUrl('bewirtungsbeleg') 
-        : 'https://n8n.baeuerlein-dev.de/webhook/bewirtungsbeleg';
+    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/bewirtungsbeleg';
 
     fetch(webhookUrl, {
         method: 'POST',
@@ -50,11 +48,7 @@ function checkBewirtungsbeleg() {
     })
     .catch(error => {
         console.error("Bewirtung-Checker Fehler:", error);
-        if (typeof isFallbackMockEnabled !== 'function' || isFallbackMockEnabled()) {
-            renderBewirtungFallback(text);
-        } else {
-            alert("Fehler bei der Serververbindung: Der n8n Webhook konnte nicht erreicht werden und lokale Mocks sind deaktiviert.");
-        }
+        renderBewirtungFallback(text);
     })
     .finally(() => {
         loader.style.display = 'none';

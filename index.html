@@ -151,25 +151,25 @@
                         <h2>Kanzlei-Diplomat</h2>
                         <p>Formuliere deine ehrliche (und vielleicht frustrierte) Nachricht in eine zutiefst höfliche, professionelle und rechtssichere Kanzlei-E-Mail um.</p>
                     </div>
-                    <div class="split-pane">
-                        <div class="pane">
-                            <div class="form-group">
-                                <label for="diplomatInput">Deine Frust-Nachricht / Rohtext:</label>
-                                <textarea id="diplomatInput" class="form-textarea" placeholder="Z. B. Reichen Sie endlich Ihre Unterlagen für 2024 ein, sonst schätzt das Amt und Sie zahlen Strafe! Ich hab keine Zeit mehr für Ihr Zaudern..."></textarea>
-                            </div>
-                            <button class="btn-primary" id="translateBtn">Umformulieren</button>
-                        </div>
-                        <div class="pane">
-                            <div class="form-group">
-                                <label>Diplomatische Kanzlei-Mail:</label>
-                                <div id="diplomatOutput" class="output-box placeholder">Die diplomatische Antwort erscheint hier...</div>
-                            </div>
-                            <button class="btn-secondary" id="copyDiplomatBtn" disabled>Kopieren</button>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label for="diplomatInput">Deine Frust-Nachricht / Rohtext:</label>
+                        <textarea id="diplomatInput" class="form-textarea" style="min-height: 180px;" placeholder="Z. B. Reichen Sie endlich Ihre Unterlagen für 2024 ein, sonst schätzt das Amt und Sie zahlen Strafe! Ich hab keine Zeit mehr für Ihr Zaudern..."></textarea>
                     </div>
-                    <div id="diplomatLoader" class="loader-container" style="display: none;">
+                    
+                    <button class="btn-primary" id="translateBtn" style="margin-bottom: 20px;">Umformulieren</button>
+                    
+                    <div id="diplomatLoader" class="loader-container" style="display: none; margin-bottom: 20px;">
                         <div class="spinner"></div>
                         <p class="loader-text">Kanzlei-Diplomat formuliert um...</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <label style="margin-bottom: 0;">Diplomatische Kanzlei-Mail:</label>
+                            <button class="btn-secondary" id="copyDiplomatBtn" disabled>Kopieren</button>
+                        </div>
+                        <div id="diplomatOutput" class="output-box placeholder" style="min-height: 200px; padding: 18px; line-height: 1.6;">Die diplomatische Antwort erscheint hier...</div>
                     </div>
                 </div>
             </div>

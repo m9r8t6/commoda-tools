@@ -75,19 +75,16 @@ function calculateSachbezug() {
     progressBar.className = "progress-bar";
     statusCard.className = "status-card";
 
-    const iconEl = statusCard.querySelector('.status-icon');
     const titleEl = statusCard.querySelector('h4');
     const descEl = statusCard.querySelector('p');
 
     if (total === 0) {
         progressBar.style.width = "0%";
-        iconEl.innerText = "⚪";
         titleEl.innerText = "Keine Zuwendungen";
         descEl.innerText = "Trage Werte ein, um die steuerfreie Sachbezugs-Grenze von 50,00 € zu überwachen.";
         statusCard.classList.add('status-card-success');
     } else if (total <= 50.00) {
         // Steuerfrei
-        iconEl.innerText = "✅";
         titleEl.innerText = "Steuer- & Sozialversicherungsfrei";
         descEl.innerText = `Die Summe von ${total.toFixed(2)} € liegt innerhalb der monatlichen Freigrenze von 50,00 € (§ 8 Abs. 2 Satz 11 EStG).`;
         statusCard.classList.add('status-card-success');
@@ -98,7 +95,6 @@ function calculateSachbezug() {
     } else {
         // Steuerpflichtig (Überschritten!)
         progressBar.classList.add('danger'); // Rot
-        iconEl.innerText = "🚨";
         titleEl.innerText = "Kritisch: VOLL steuerpflichtig!";
         descEl.innerHTML = `
             <strong>Achtung Freigrenze!</strong> Die Summe von <span style="color:#DC2626; font-weight:700;">${total.toFixed(2)} €</span> überschreitet das Limit um ${(total - 50.00).toFixed(2)} €.<br>

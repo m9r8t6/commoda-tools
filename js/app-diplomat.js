@@ -39,7 +39,7 @@ function rewriteText() {
     translateBtn.disabled = true;
     translateBtn.innerText = "Schreibt um...";
 
-    const language = document.getElementById('diplomatLanguage').value;
+    const language = document.getElementById('diplomatLanguageToggle').checked ? 'en' : 'de';
     const payload = { 
         text: inputText,
         sender: senderName,

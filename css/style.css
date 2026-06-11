@@ -333,6 +333,77 @@ body {
     margin-bottom: 20px;
 }
 
+/* Custom Toggle Switch for Language */
+.diplomat-switch {
+    position: relative;
+    display: inline-block;
+    width: 76px;
+    height: 38px;
+    user-select: none;
+}
+.diplomat-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.diplomat-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--primary-color); /* Purple background */
+    border-radius: 38px;
+    transition: background-color 0.3s;
+    border: 1px solid var(--border-color);
+}
+.slider-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    font-weight: 800;
+    z-index: 3;
+    transition: color 0.3s;
+    pointer-events: none;
+}
+.text-de {
+    left: 12px;
+}
+.text-en {
+    right: 12px;
+}
+.slider-knob {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    left: 4px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    z-index: 2;
+}
+
+/* Active / Inactive states based on checkbox */
+.diplomat-switch input:not(:checked) + .diplomat-slider .text-de {
+    color: var(--primary-color);
+}
+.diplomat-switch input:not(:checked) + .diplomat-slider .text-en {
+    color: rgba(255, 255, 255, 0.85);
+}
+.diplomat-switch input:checked + .diplomat-slider .text-de {
+    color: rgba(255, 255, 255, 0.85);
+}
+.diplomat-switch input:checked + .diplomat-slider .text-en {
+    color: var(--primary-color);
+}
+.diplomat-switch input:checked + .diplomat-slider .slider-knob {
+    transform: translateX(38px);
+}
+
 /* Split Pane Layout (Diplomat) */
 .split-pane {
     display: grid;

@@ -30,7 +30,9 @@ function rewriteText() {
     translateBtn.innerText = "Schreibt um...";
 
     const payload = { text: inputText };
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/kanzlei-diplomat';
+    const webhookUrl = typeof getWebhookUrl === 'function' 
+        ? getWebhookUrl('kanzlei-diplomat') 
+        : 'https://n8n.baeuerlein-dev.de/webhook/kanzlei-diplomat';
 
     fetch(webhookUrl, {
         method: 'POST',
@@ -55,8 +57,11 @@ function rewriteText() {
     })
     .catch(error => {
         console.error("Kanzlei-Diplomat Fehler:", error);
-        // Lokaler Fallback-Mock für den Fall, dass die Demo offline ist
-        rewriteFallback(inputText);
+        if (typeof isFallbackMockEnabled !== 'function' || isFallbackMockEnabled()) {
+            rewriteFallback(inputText);
+        } else {
+            alert("Fehler bei der Serververbindung: Der n8n Webhook konnte nicht erreicht werden und lokale Mocks sind deaktiviert.");
+        }
     })
     .finally(() => {
         loader.style.display = 'none';

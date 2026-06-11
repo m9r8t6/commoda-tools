@@ -74,7 +74,10 @@ function startSearch() {
         blacklist: blacklistUrls 
     };
 
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/mitarbeitersuche'; // <-- Prüfe deine Domain
+    const webhookUrl = typeof getWebhookUrl === 'function' 
+        ? getWebhookUrl('mitarbeitersuche') 
+        : 'https://n8n.baeuerlein-dev.de/webhook/mitarbeitersuche';
+        
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

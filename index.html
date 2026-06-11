@@ -55,62 +55,63 @@
 
         <div class="user-profile">
             <div class="avatar"></div>
-            <div class="user-info">
+            <div class="user-info" style="flex: 1;">
                 <span class="user-name">Moritz Bäuerlein</span>
                 <span class="user-role">Entwickler</span>
             </div>
+            <a href="#" class="settings-btn nav-item" id="nav-settings" data-target="settings" data-title="Einstellungen" title="Einstellungen">
+                <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+                </svg>
+            </a>
         </div>
     </aside>
 
     <main class="main-content">
         <header class="topbar">
             <h1 class="page-title" id="appTitle">Mitarbeitersuche</h1>
-            
-            <div class="topbar-filters active-filters" id="filters-mitarbeiter">
-                <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
-                <datalist id="jobOptions">
-                    <option value="Steuerberater">Steuerberater</option>
-                    <option value="Steuerfachangestellter">Steuerfachangestellter</option>
-                    <option value="Lohnbuchhalter">Lohnbuchhalter</option>
-                    <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
-                    <option value="Steuerfachwirt">Steuerfachwirt</option>
-                    <option value="Finanzbuchhalter">Finanzbuchhalter</option>
-                    <option value="Kanzleimanager">Kanzleimanager</option>
-                </datalist>
-
-                <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
-
-                <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
-                <datalist id="distanzOptions">
-                    <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
-                    <option value="10 km">10 km</option>
-                    <option value="20 km">20 km</option>
-                    <option value="50 km">50 km</option>
-                </datalist>
-
-                <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
-                <datalist id="anzahlOptions">
-                    <option value="5">5 Ergebnisse</option>
-                    <option value="10">10 Ergebnisse</option>
-                </datalist>
-
-                <button class="btn-primary" id="searchBtn">Suchen</button>
-            </div>
-
-            <div class="topbar-filters" id="filters-afa">
-                <input type="text" id="afaSearchInput" class="filter-input" placeholder="Wirtschaftsgut suchen (z. B. Bürostuhl)..." style="width: 380px;">
-            </div>
-
-            <button id="nav-saved-btn" class="btn-saved">
-                <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
-                    <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
-                </svg>
-                Gespeichert (<span id="saved-count">0</span>)
-            </button>
         </header>
 
         <div class="content-area">
             <div id="view-mitarbeiter" class="app-view active-view">
+                <div class="view-filters-container" id="filters-mitarbeiter">
+                    <input type="text" id="jobFilter" list="jobOptions" class="filter-input" placeholder="Job wählen/tippen">
+                    <datalist id="jobOptions">
+                        <option value="Steuerberater">Steuerberater</option>
+                        <option value="Steuerfachangestellter">Steuerfachangestellter</option>
+                        <option value="Lohnbuchhalter">Lohnbuchhalter</option>
+                        <option value="Bilanzbuchhalter">Bilanzbuchhalter</option>
+                        <option value="Steuerfachwirt">Steuerfachwirt</option>
+                        <option value="Finanzbuchhalter">Finanzbuchhalter</option>
+                        <option value="Kanzleimanager">Kanzleimanager</option>
+                    </datalist>
+
+                    <input type="text" id="ortFilter" class="filter-input" placeholder="Ort / PLZ">
+
+                    <input type="text" id="distanzFilter" list="distanzOptions" class="filter-input" placeholder="Umkreis">
+                    <datalist id="distanzOptions">
+                        <option value="0 km (Vor Ort)">0 km (Vor Ort)</option>
+                        <option value="10 km">10 km</option>
+                        <option value="20 km">20 km</option>
+                        <option value="50 km">50 km</option>
+                    </datalist>
+
+                    <input type="number" id="anzahlFilter" list="anzahlOptions" class="filter-input" placeholder="Anzahl" value="5" min="1" max="10">
+                    <datalist id="anzahlOptions">
+                        <option value="5">5 Ergebnisse</option>
+                        <option value="10">10 Ergebnisse</option>
+                    </datalist>
+
+                    <button class="btn-primary" id="searchBtn">Suchen</button>
+
+                    <button id="nav-saved-btn" class="btn-saved" style="margin-left: auto;">
+                        <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
+                            <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        Gespeichert (<span id="saved-count">0</span>)
+                    </button>
+                </div>
+
                 <div id="loader" class="loader-container" style="display: none;">
                     <div class="spinner"></div>
                     <p class="loader-text">n8n durchsucht das Web...</p>
@@ -176,8 +177,13 @@
                         <h2>AfA-Scout (Abschreibungsdauer)</h2>
                         <p>Durchsuche die offiziellen AfA-Tabellen des Bundesfinanzministeriums nach Nutzungsdauer und Fundstelle.</p>
                     </div>
+                    
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <input type="text" id="afaSearchInput" class="filter-input" placeholder="Wirtschaftsgut suchen (z. B. Bürostuhl)..." style="width: 100%; max-width: 500px; margin: 0 auto; display: block;">
+                    </div>
+
                     <div id="afaResults" class="afa-grid">
-                        <p style="color: #6B7280; text-align: center; padding: 20px;">Tippe einen Suchbegriff in die obere Suchleiste ein.</p>
+                        <p style="color: #6B7280; text-align: center; padding: 20px;">Tippe einen Suchbegriff in die Suchleiste ein.</p>
                     </div>
                 </div>
             </div>
@@ -271,6 +277,29 @@
                 </div>
                 <div id="savedGrid" class="results-list"></div>
             </div>
+
+            <div id="view-settings" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>Kanzlei-Einstellungen</h2>
+                        <p>Konfiguriere hier die Schnittstellen und Parameter für deine Kanzlei-Werkzeuge.</p>
+                    </div>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="settingsN8nUrl">n8n Webhook Basis-URL:</label>
+                            <input type="url" id="settingsN8nUrl" class="filter-input" placeholder="https://n8n.baeuerlein-dev.de/webhook" style="width: 100%;">
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Die Basis-URL zu deiner n8n Instanz. Der Pfad des jeweiligen Webhooks wird automatisch angehängt (z.B. <code>/mitarbeitersuche</code>).</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-group">
+                                <input type="checkbox" id="settingsFallbackMock" checked>
+                                <span>Lokale Fallback-Mocks aktivieren (wenn n8n offline ist)</span>
+                            </label>
+                        </div>
+                        <button class="btn-primary" id="saveSettingsBtn" style="margin-top: 10px; width: 220px;">Einstellungen speichern</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -282,6 +311,7 @@
     <script src="js/app-afa.js"></script>
     <script src="js/app-fristen.js"></script>
     <script src="js/app-sachbezug.js"></script>
+    <script src="js/app-settings.js"></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

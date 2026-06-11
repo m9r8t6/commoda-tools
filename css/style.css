@@ -536,3 +536,46 @@ body {
     font-size: 0.8rem;
     color: var(--text-muted);
 }
+
+/* --- VIEW FILTERS CONTAINER (Refactoring topbar) --- */
+.view-filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    background-color: var(--surface-color);
+    padding: 16px 24px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 24px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+/* Settings Gear styling */
+.settings-btn {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    text-decoration: none;
+    margin-left: auto;
+}
+.settings-btn:hover {
+    color: var(--primary-color);
+    background-color: var(--active-bg);
+    transform: rotate(30deg);
+}
+
+/* Settings View UI */
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}

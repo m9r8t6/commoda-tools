@@ -21,6 +21,31 @@
                 <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                 Mitarbeitersuche
             </a>
+
+            <a href="#" class="nav-item" data-target="bewirtung" data-title="Bewirtungsbeleg-Checker">
+                <svg viewBox="0 0 24 24"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2L7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg>
+                Bewirtungsbeleg-Checker
+            </a>
+
+            <a href="#" class="nav-item" data-target="diplomat" data-title="Kanzlei-Diplomat">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                Kanzlei-Diplomat
+            </a>
+
+            <a href="#" class="nav-item" data-target="afa" data-title="AfA-Scout">
+                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                AfA-Scout
+            </a>
+
+            <a href="#" class="nav-item" data-target="fristen" data-title="Fristen- & Einspruchs-Retter">
+                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 3h5v5h-5z"/></svg>
+                Fristen- & Einspruchs-Retter
+            </a>
+
+            <a href="#" class="nav-item" data-target="sachbezug" data-title="50-Euro-Sachbezug-Rechner">
+                <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                50-Euro-Sachbezug-Rechner
+            </a>
             
             <a href="#" class="nav-item" data-target="gesetze" data-title="Gesetzes-Radar">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
@@ -72,6 +97,10 @@
                 <button class="btn-primary" id="searchBtn">Suchen</button>
             </div>
 
+            <div class="topbar-filters" id="filters-afa">
+                <input type="text" id="afaSearchInput" class="filter-input" placeholder="Wirtschaftsgut suchen (z. B. Bürostuhl)..." style="width: 380px;">
+            </div>
+
             <button id="nav-saved-btn" class="btn-saved">
                 <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
                     <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
@@ -87,6 +116,145 @@
                     <p class="loader-text">n8n durchsucht das Web...</p>
                 </div>
                 <div id="resultsGrid" class="results-grid"></div>
+            </div>
+
+            <div id="view-bewirtung" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>Bewirtungsbeleg-Formalien-Checker</h2>
+                        <p>Prüfe, ob dein Bewirtungsbeleg alle steuerlich erforderlichen Angaben enthält, um beim Betriebsprüfer standzuhalten.</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="bewirtungText">Text des Belegs oder Angaben eingeben:</label>
+                        <textarea id="bewirtungText" class="form-textarea" placeholder="Z. B. Restaurant XY, Datum: 12.04.2026, Betrag: 124,50 EUR, Teilnehmer: Moritz B., Herr Schmidt. Anlass: Arbeitsgespräch. Trinkgeld bar gezahlt..."></textarea>
+                    </div>
+                    <button class="btn-primary" id="checkBewirtungBtn">Beleg prüfen</button>
+                    
+                    <div id="bewirtungLoader" class="loader-container" style="display: none;">
+                        <div class="spinner"></div>
+                        <p class="loader-text">DeepSeek prüft die Belegdaten...</p>
+                    </div>
+                    
+                    <div id="bewirtungResult" style="display: none;">
+                        <!-- Dynamic status card will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-diplomat" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>Kanzlei-Diplomat</h2>
+                        <p>Formuliere deine ehrliche (und vielleicht frustrierte) Nachricht in eine zutiefst höfliche, professionelle und rechtssichere Kanzlei-E-Mail um.</p>
+                    </div>
+                    <div class="split-pane">
+                        <div class="pane">
+                            <div class="form-group">
+                                <label for="diplomatInput">Deine Frust-Nachricht / Rohtext:</label>
+                                <textarea id="diplomatInput" class="form-textarea" placeholder="Z. B. Reichen Sie endlich Ihre Unterlagen für 2024 ein, sonst schätzt das Amt und Sie zahlen Strafe! Ich hab keine Zeit mehr für Ihr Zaudern..."></textarea>
+                            </div>
+                            <button class="btn-primary" id="translateBtn">Umformulieren</button>
+                        </div>
+                        <div class="pane">
+                            <div class="form-group">
+                                <label>Diplomatische Kanzlei-Mail:</label>
+                                <div id="diplomatOutput" class="output-box placeholder">Die diplomatische Antwort erscheint hier...</div>
+                            </div>
+                            <button class="btn-secondary" id="copyDiplomatBtn" disabled>Kopieren</button>
+                        </div>
+                    </div>
+                    <div id="diplomatLoader" class="loader-container" style="display: none;">
+                        <div class="spinner"></div>
+                        <p class="loader-text">Kanzlei-Diplomat formuliert um...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-afa" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>AfA-Scout (Abschreibungsdauer)</h2>
+                        <p>Durchsuche die offiziellen AfA-Tabellen des Bundesfinanzministeriums nach Nutzungsdauer und Fundstelle.</p>
+                    </div>
+                    <div id="afaResults" class="afa-grid">
+                        <p style="color: #6B7280; text-align: center; padding: 20px;">Tippe einen Suchbegriff in die obere Suchleiste ein.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-fristen" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>Fristen- & Einspruchs-Retter (§ 108 AO)</h2>
+                        <p>Berechne die genaue Einspruchsfrist unter Berücksichtigung der 3-Tage-Bekanntgabefiktion und bayerischer Feiertage.</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div>
+                            <div class="form-group">
+                                <label for="bescheidDate">Datum des Steuerbescheids:</label>
+                                <input type="date" id="bescheidDate" class="filter-input" style="width: 100%;">
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-group">
+                                    <input type="checkbox" id="bekanntgabeFiktion" checked>
+                                    <span>3-Tage-Bekanntgabefiktion anwenden (§ 122 AO)</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="fristenRegion">Region (für Feiertage):</label>
+                                <select id="fristenRegion" class="filter-input" style="width: 100%;">
+                                    <option value="BY-Mittelfranken">Bayern (Mittelfranken / Nürnberg)</option>
+                                    <option value="BY-Allgemein">Bayern (Allgemein)</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" id="calcFristenBtn" style="width: 100%;">Frist berechnen</button>
+                        </div>
+                        <div>
+                            <h3>Berechnungsergebnis</h3>
+                            <div id="fristenResultEmpty" style="color: #6B7280; font-style: italic; margin-top: 16px;">
+                                Bitte gib ein Bescheidsdatum ein und klicke auf "Frist berechnen".
+                            </div>
+                            <div id="fristenTimeline" class="timeline" style="display: none;">
+                                <!-- Timeline event items go here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-sachbezug" class="app-view">
+                <div class="tool-container">
+                    <div class="tool-title-desc">
+                        <h2>50-Euro-Sachbezug-Rechner</h2>
+                        <p>Prüfe, ob die Summe der monatlichen Sachbezüge eines Mitarbeiter die steuerfreie Freigrenze von 50,00 € überschreitet.</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+                        <div>
+                            <h3>Zuwendungen im aktuellen Monat</h3>
+                            <div id="sachbezugItems" style="margin-top: 16px;">
+                                <!-- Sachbezug rows with delete buttons -->
+                            </div>
+                            <button class="btn-secondary" id="addSachbezugItemBtn" style="margin-top: 12px; width: 100%;">+ Zuwendung hinzufügen</button>
+                        </div>
+                        <div>
+                            <h3>Budget-Auslastung</h3>
+                            <div class="progress-bar-container">
+                                <div id="sachbezugProgress" class="progress-bar"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 1.1rem;">
+                                <span>Gesamt:</span>
+                                <strong id="sachbezugTotalText">0,00 €</strong>
+                            </div>
+                            <div id="sachbezugStatus" class="status-card status-card-success" style="margin-top: 16px;">
+                                <div class="status-icon">✅</div>
+                                <div class="status-content">
+                                    <h4>Steuerfrei</h4>
+                                    <p>Die Summe liegt im grünen Bereich (max. 50,00 €).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="view-gesetze" class="app-view">
@@ -108,6 +276,12 @@
 
     <script src="js/navigation.js"></script>
     <script src="js/app-mitarbeiter.js"></script>
+    <script src="js/app-bewirtung.js"></script>
+    <script src="js/app-diplomat.js"></script>
+    <script src="js/afa-data.js"></script>
+    <script src="js/app-afa.js"></script>
+    <script src="js/app-fristen.js"></script>
+    <script src="js/app-sachbezug.js"></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

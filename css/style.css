@@ -247,3 +247,292 @@ body {
 @keyframes spin { 
     to { transform: rotate(360deg); } 
 }
+
+/* --- NEW TOOL STYLES --- */
+/* Common Tool Container */
+.tool-container {
+    background-color: var(--surface-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+    max-width: 900px;
+    margin: 0 auto;
+}
+.tool-title-desc {
+    margin-bottom: 24px;
+}
+.tool-title-desc h2 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 8px;
+}
+.tool-title-desc p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* Forms & Textareas */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+.form-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    outline: none;
+    transition: all 0.2s;
+}
+.form-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* Split Pane Layout (Diplomat) */
+.split-pane {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 768px) {
+    .split-pane {
+        grid-template-columns: 1fr;
+    }
+}
+.pane {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Output Panel */
+.output-box {
+    background-color: #F9FAFB;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 120px;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    position: relative;
+    color: var(--text-main);
+}
+.output-box.placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Checkboxes & Inline items */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    user-select: none;
+}
+.checkbox-group input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+}
+
+/* Status Cards & Checklists */
+.status-card {
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid transparent;
+}
+.status-card-success {
+    background-color: #ECFDF5;
+    border-color: #A7F3D0;
+    color: #065F46;
+}
+.status-card-warning {
+    background-color: #FFFBEB;
+    border-color: #FDE68A;
+    color: #92400E;
+}
+.status-card-danger {
+    background-color: #FEF2F2;
+    border-color: #FEE2E2;
+    color: #991B1B;
+}
+.status-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+.status-content h4 {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.status-content p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Checklists */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+.checklist-item.checked {
+    color: #059669;
+}
+.checklist-item.missing {
+    color: #DC2626;
+}
+
+/* Progress / Sachbezug Styles */
+.sachbezug-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.sachbezug-item-row input[type="text"] {
+    flex: 2;
+}
+.sachbezug-item-row input[type="number"] {
+    flex: 1;
+    min-width: 80px;
+}
+.progress-bar-container {
+    background-color: #E5E7EB;
+    border-radius: 9999px;
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    margin: 20px 0 10px 0;
+    border: 1px solid var(--border-color);
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    background-color: var(--primary-color);
+}
+.progress-bar.warning {
+    background-color: #F59E0B;
+}
+.progress-bar.danger {
+    background-color: #EF4444;
+}
+.progress-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* Timeline/Fristen Styles */
+.timeline {
+    position: relative;
+    padding-left: 24px;
+    border-left: 2px solid var(--border-color);
+    margin: 24px 0 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.timeline-event {
+    position: relative;
+}
+.timeline-event::before {
+    content: '';
+    position: absolute;
+    left: -31px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--surface-color);
+    border: 2px solid var(--primary-color);
+}
+.timeline-event.highlight::before {
+    background-color: var(--primary-color);
+    transform: scale(1.2);
+}
+.timeline-event.warning::before {
+    border-color: #F59E0B;
+    background-color: #F59E0B;
+}
+.timeline-event h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+.timeline-event p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.timeline-date {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.timeline-event.warning .timeline-date {
+    color: #D97706;
+}
+
+/* AfA Scout search list */
+.afa-grid {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.afa-row {
+    background-color: #F9FAFB;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+}
+.afa-row:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+.afa-item-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.afa-item-years {
+    background-color: var(--active-bg);
+    color: var(--primary-color);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+.afa-item-source {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

@@ -5,6 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const filtersMitarbeiter = document.getElementById('filters-mitarbeiter');
     const savedBtn = document.getElementById('nav-saved-btn');
 
+    // --- MOBILE SIDEBAR TOGGLE LOGIC ---
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebar = document.querySelector('.sidebar');
+
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove('sidebar-open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    }
+
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.add('sidebar-open');
+            if (sidebarOverlay) sidebarOverlay.classList.add('active');
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault(); // Verhindert das Springen der Seite bei # Links
@@ -43,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     savedBtn.style.display = 'none';
                 }
             }
+
+            // Mobile Sidebar schließen bei Klick
+            closeSidebar();
         });
     });
 });

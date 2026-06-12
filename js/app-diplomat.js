@@ -33,6 +33,7 @@ function rewriteText() {
     const inputText = document.getElementById('diplomatInput').value.trim();
     const senderName = document.getElementById('diplomatSender').value.trim();
     const recipientName = document.getElementById('diplomatRecipient').value.trim();
+    const institution = document.getElementById('diplomatInstitution').value.trim();
 
     if (!inputText) {
         alert("Bitte gib einen Rohtext ein, der diplomatisch umschrieben werden soll!");
@@ -63,6 +64,7 @@ function rewriteText() {
         text: inputText,
         sender: senderName,
         recipient: recipientName,
+        institution: institution,
         language: language,
         isReply: replyMode,
         anonymize: anonymize

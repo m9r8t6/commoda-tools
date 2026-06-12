@@ -72,8 +72,8 @@ function rewriteText() {
     if (replyMode) {
         payload.emailToAnswer = emailToAnswer;
     }
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/aidiplomat';
-
+    const webhookUrl = `${window.APP_CONFIG.API_BASE_URL}/webhook/aidiplomat`;
+    
     fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

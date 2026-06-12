@@ -23,7 +23,7 @@ function checkBewirtungsbeleg() {
     checkBtn.innerText = "Prüfe...";
 
     const payload = { text: text };
-    const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/bewirtungsbeleg';
+    const webhookUrl = `${window.APP_CONFIG.API_BASE_URL}/webhook/bewirtungsbeleg`;
 
     fetch(webhookUrl, {
         method: 'POST',

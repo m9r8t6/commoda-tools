@@ -17,13 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const replyToggle = document.getElementById('diplomatReplyToggle');
     const emailToAnswerContainer = document.getElementById('diplomatEmailToAnswerContainer');
     if (replyToggle && emailToAnswerContainer) {
-        replyToggle.addEventListener('change', () => {
+        const updateReplyVisibility = () => {
             if (replyToggle.checked) {
                 emailToAnswerContainer.style.display = 'flex';
             } else {
                 emailToAnswerContainer.style.display = 'none';
             }
-        });
+        };
+        replyToggle.addEventListener('change', updateReplyVisibility);
+        updateReplyVisibility();
     }
 });
 
@@ -62,9 +64,12 @@ function rewriteText() {
         sender: senderName,
         recipient: recipientName,
         language: language,
-        anonymize: anonymize,
-        emailToAnswer: emailToAnswer
+        isReply: replyMode,
+        anonymize: anonymize
     };
+    if (replyMode) {
+        payload.emailToAnswer = emailToAnswer;
+    }
     const webhookUrl = 'https://n8n.baeuerlein-dev.de/webhook/aidiplomat';
 
     fetch(webhookUrl, {

@@ -404,6 +404,37 @@ body {
     transform: translateX(38px);
 }
 
+/* Wide Switch variant for NEIN/JA labels */
+.diplomat-switch.wide-switch {
+    width: 90px;
+}
+.diplomat-switch.wide-switch .slider-text.text-de {
+    left: 10px;
+    font-size: 11px;
+}
+.diplomat-switch.wide-switch .slider-text.text-en {
+    right: 14px;
+    font-size: 11px;
+}
+.diplomat-switch.wide-switch .slider-knob {
+    width: 38px;
+}
+.diplomat-switch.wide-switch input:checked + .diplomat-slider .slider-knob {
+    transform: translateX(46px); /* 90 - 38 - 6 */
+}
+.diplomat-switch.wide-switch input:not(:checked) + .diplomat-slider .text-de {
+    color: var(--primary-color);
+}
+.diplomat-switch.wide-switch input:not(:checked) + .diplomat-slider .text-en {
+    color: rgba(255, 255, 255, 0.85);
+}
+.diplomat-switch.wide-switch input:checked + .diplomat-slider .text-de {
+    color: rgba(255, 255, 255, 0.85);
+}
+.diplomat-switch.wide-switch input:checked + .diplomat-slider .text-en {
+    color: var(--primary-color);
+}
+
 /* Split Pane Layout (Diplomat) */
 .split-pane {
     display: grid;

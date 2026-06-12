@@ -171,6 +171,33 @@
                                 </span>
                             </label>
                         </div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 0 0 auto;">
+                            <label style="margin-bottom: 8px;">E-Mail beantworten:</label>
+                            <label class="diplomat-switch wide-switch">
+                                <input type="checkbox" id="diplomatReplyToggle">
+                                <span class="diplomat-slider">
+                                    <span class="slider-text text-de">NEIN</span>
+                                    <span class="slider-text text-en">JA</span>
+                                    <span class="slider-knob"></span>
+                                </span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 0 0 auto;">
+                            <label style="margin-bottom: 8px;">Anonymisieren:</label>
+                            <label class="diplomat-switch wide-switch">
+                                <input type="checkbox" id="diplomatAnonymToggle">
+                                <span class="diplomat-slider">
+                                    <span class="slider-text text-de">NEIN</span>
+                                    <span class="slider-text text-en">JA</span>
+                                    <span class="slider-knob"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" id="diplomatEmailToAnswerContainer" style="display: none; margin-bottom: 20px;">
+                        <label for="diplomatEmailToAnswer">Zu beantwortende E-Mail:</label>
+                        <textarea id="diplomatEmailToAnswer" class="form-textarea" style="min-height: 120px;" placeholder="Kopieren Sie hier die E-Mail hinein, auf die Sie antworten möchten..."></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -314,8 +341,8 @@
             <div id="view-settings" class="app-view">
                 <div class="tool-container">
                     <div class="tool-title-desc">
-                        <h2>Kanzlei-Einstellungen</h2>
-                        <p>Hier kannst du später kanzleiweite Einstellungen für deine Tools konfigurieren.</p>
+                        <h2>Einstellungen</h2>
+                        <p>Einstellungen für Tools konfigurieren.</p>
                     </div>
                     <p style="color: var(--text-muted); font-style: italic;">Aktuell sind keine konfigurierbaren Einstellungen vorhanden.</p>
                 </div>

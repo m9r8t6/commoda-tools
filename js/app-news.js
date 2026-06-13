@@ -341,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const originalText = fetchBtn.querySelector(".btn-text");
             if (originalText) originalText.innerText = "Prüfe Feeds...";
 
-            const webhookUrl = `${window.APP_CONFIG.API_BASE_URL || 'https://n8n.baeuerlein-dev.de'}/webhook-test/fetch-tax-news`;
+            const webhookUrl = `${window.APP_CONFIG.API_BASE_URL || 'https://n8n.baeuerlein-dev.de'}/webhook/fetch-tax-news`;
 
             fetch(webhookUrl, {
                 method: 'POST',
@@ -355,28 +355,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return response.json();
             })
             .then(data => {
+                // If it is an array containing the data, take the first element
                 let reportData = Array.isArray(data) ? data[0] : data;
                 
-                if (!reportData || (!reportData.title && !reportData.htmlContent && !reportData.content)) {
-                    throw new Error("Ungültiges Datenformat erhalten");
+                if (!reportData || reportData.status !== "success" || !reportData.html_report) {
+                    throw new Error("Ungültiges Datenformat vom Webhook erhalten");
                 }
 
+                const sourceLabel = getSourceLabel(selectedSource);
                 const fetchedReport = {
                     id: Date.now(),
-                    title: reportData.title || `Steuer-News (${getSourceLabel(selectedSource)})`,
-                    date: reportData.date || new Date().toLocaleDateString("de-DE"),
-                    source: reportData.source || getSourceLabel(selectedSource),
+                    title: `Steuer-News (${sourceLabel})`,
+                    date: new Date().toLocaleDateString("de-DE"),
+                    source: sourceLabel,
                     saved: false,
-                    summary: reportData.summary || "Live abgerufene Steuer-News.",
-                    htmlContent: reportData.htmlContent || reportData.content || `
-                        <div class="news-section-card">
-                            <h4>
-                                <span class="news-source-tag ${selectedSource.includes("bundesfinanzministerium.de") ? "tag-bmf" : "tag-haufe"}">${getSourceLabel(selectedSource)}</span>
-                                Live-Bericht geladen
-                            </h4>
-                            <p>${reportData.text || JSON.stringify(reportData)}</p>
-                        </div>
-                    `
+                    summary: `Live-Bericht für ${sourceLabel}.`,
+                    htmlContent: reportData.html_report
                 };
 
                 reports.push(fetchedReport);

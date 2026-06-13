@@ -1,160 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     // --- MOCK REPORTS DATA ---
-    const initialReports = [
-        {
-            id: 1,
-            title: "BMF: E-Rechnungspflicht ab 2025",
-            date: "28.05.2026",
-            source: "BMF",
-            saved: true,
-            summary: "BMF-Schreiben zur Einführung der obligatorischen E-Rechnung ab 01.01.2025 im B2B-Bereich.",
-            htmlContent: `
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-bmf">BMF</span>
-                        BMF-Schreiben zur Einführung der obligatorischen E-Rechnung
-                    </h4>
-                    <p><strong>Hintergrund:</strong> Ab dem 1. Januar 2025 sind alle inländischen Unternehmer verpflichtet, elektronische Rechnungen für steuerbare Umsätze im B2B-Bereich zu empfangen. Das BMF hat nun die finalen Richtlinien veröffentlicht.</p>
-                    <p><strong>Wichtige Fristen & Details:</strong></p>
-                    <ul>
-                        <li><strong>Empfangspflicht:</strong> Gilt ab 01.01.2025 ausnahmslos für alle inländischen Unternehmen.</li>
-                        <li><strong>Ausstellungspflicht:</strong> Übergangsregelungen bis Ende 2026 für Papierrechnungen und einfache PDF-Rechnungen (Zustimmung des Empfängers erforderlich).</li>
-                        <li><strong>Format-Vorgaben:</strong> Zulässig sind Formate, die der europäischen Norm EN 16931 entsprechen (z. B. ZUGFeRD ab Version 2.0.1 oder XRechnung).</li>
-                    </ul>
-                    <p><em>Tipp: Kanzleien sollten Mandanten proaktiv auf die technische Empfangsbereitschaft hinweisen und E-Mail-Postfächer anpassen.</em></p>
-                </div>
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-bmf">BMF</span>
-                        Ergänzende Hinweise zur Archivierung von strukturierten Daten
-                    </h4>
-                    <p>Zusammen mit der E-Rechnung müssen die strukturierten XML-Daten im Originalzustand unveränderbar archiviert werden (GoBD-konform). Das bloße Aufbewahren eines PDF-Abbilds reicht rechtlich nicht aus.</p>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 32px;">
-                    Disclaimer: Dieser Report dient der Erstinformation und ersetzt keine individuelle Steuerberatung.
-                </p>
-            `
-        },
-        {
-            id: 2,
-            title: "Haufe: Reform der Erbschaftsteuer",
-            date: "05.06.2026",
-            source: "Haufe",
-            saved: true,
-            summary: "Aktuelle Entwicklungen bei der Bewertung von Betriebsvermögen für die Erbschaftsteuer.",
-            htmlContent: `
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-haufe">Haufe</span>
-                        Vereinfachtes Ertragswertverfahren: Zinsanpassung
-                    </h4>
-                    <p><strong>Problemstellung:</strong> Der Basiszins für das vereinfachte Ertragswertverfahren wurde für Bewertungsstichtage im Jahr 2026 an die Zinsentwicklung angepasst. Dies führt tendenziell zu geringeren Multiplikatoren und damit zu niedrigeren steuerlichen Unternehmenswerten im Vergleich zum Vorjahr.</p>
-                    <p><strong>Auswirkungen für KMU:</strong></p>
-                    <ul>
-                        <li>Erleichtert die steuerfreie oder vergünstigte Übertragung von mittelständischen Betriebsstrukturen im Schenkungsfall.</li>
-                        <li>Die Einhaltung der Lohnsummenfristen bleibt jedoch durch die Inflation und den Fachkräftemangel das größte Risiko.</li>
-                    </ul>
-                </div>
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-haufe">Haufe</span>
-                        Lohnsummenregelung unter Druck
-                    </h4>
-                    <p>Fachbeiräte weisen darauf hin, dass Kanzleien bei laufenden Verschonungsfristen die Lohnsummen der Mandantenbetriebe engmaschig überwachen müssen, um Nachversteuerungen zu vermeiden.</p>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 32px;">
-                    Disclaimer: Dieser Report dient der Erstinformation und ersetzt keine individuelle Steuerberatung.
-                </p>
-            `
-        },
-        {
-            id: 3,
-            title: "Steuer-Update: BMF & Haufe (KW 24)",
-            date: "12.06.2026",
-            source: "BMF & Haufe",
-            saved: false,
-            summary: "Aktueller Wochen-Report mit Neuigkeiten zu Inflationsausgleichsprämien und doppelter Haushaltsführung.",
-            htmlContent: `
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-bmf">BMF</span>
-                        Präzisierung zur Auszahlung der Inflationsausgleichsprämie
-                    </h4>
-                    <p>Das BMF hat in einem FAQ-Update klargestellt, dass steuerfreie Prämien, die bis zum gesetzlichen Stichtag am 31.12.2024 arbeitsrechtlich vereinbart wurden, auch bei ratenweiser Auszahlung bis weit in das Jahr 2026 steuerfrei abgerechnet werden können. Voraussetzung ist eine lückenlose Dokumentation der Vereinbarung vor dem Stichtag.</p>
-                </div>
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-haufe">Haufe</span>
-                        Verschärfte Anforderungen an die doppelte Haushaltsführung
-                    </h4>
-                    <p><strong>Entscheidung des BFH:</strong> Die finanzielle Beteiligung am Haupthausstand bei einer doppelten Haushaltsführung wurde präzisiert. Eine rein symbolische Beteiligung (z. B. geringfügiger Nebenkostenbeitrag) reicht nicht mehr aus. Der Arbeitnehmer muss sich substanziell an den laufenden Kosten des Haushalts beteiligen (mindestens 10% der monatlichen Kosten).</p>
-                    <p><strong>Praxishinweis:</strong> Bei Betriebsprüfungen werden zunehmend Nachweise wie Überweisungsbelege oder Mietverträge für den Erstwohnsitz verlangt.</p>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 32px;">
-                    Disclaimer: Dieser Report dient der Erstinformation und ersetzt keine individuelle Steuerberatung.
-                </p>
-            `
-        }
-    ];
+    const initialReports = [];
 
-    // Pool of new reports to fetch via the button
-    const fetchableReportsPool = [
-        {
-            id: 4,
-            title: "Haufe: USt in der Gastronomie",
-            date: "13.06.2026",
-            source: "Haufe",
-            saved: false,
-            summary: "Rückkehr zu 19% Umsatzsteuer bei Verzehr vor Ort und Abgrenzungsschwierigkeiten.",
-            htmlContent: `
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-haufe">Haufe</span>
-                        Gastronomie: Ende der 7% Regelung für Restaurantdienstleistungen
-                    </h4>
-                    <p><strong>Aktueller Stand:</strong> Die Sonderregelung zur Absenkung des Steuersatzes auf 7% für Speisen vor Ort ist endgültig beendet. Alle Speisen und Getränke, die in einem Restaurant verzehrt werden, unterliegen wieder dem Regelsatz von 19%.</p>
-                    <p><strong>Die Abgrenzungsfalle:</strong></p>
-                    <ul>
-                        <li><strong>Außer-Haus-Verkauf (Lieferung):</strong> 7% Steuer gilt weiterhin für zubereitete Speisen zur Mitnahme.</li>
-                        <li><strong>In-House-Verzehr (Dienstleistung):</strong> 19% Steuer fällt an, sobald dem Gast Sitzgelegenheiten, Geschirr oder Service bereitgestellt werden.</li>
-                    </ul>
-                    <p>Kassensysteme müssen sauber getrennt programmiert sein, da Betriebsprüfer die Verteilungsquote (In-House vs. Außer-Haus) vermehrt statistisch prüfen.</p>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 32px;">
-                    Disclaimer: Dieser Report dient der Erstinformation und ersetzt keine individuelle Steuerberatung.
-                </p>
-            `
-        },
-        {
-            id: 5,
-            title: "BMF: Krypto-Besteuerung Richtlinie",
-            date: "13.06.2026",
-            source: "BMF",
-            saved: false,
-            summary: "Klarstellung zu Haltefristen bei Staking und Lending von Krypto-Assets.",
-            htmlContent: `
-                <div class="news-section-card">
-                    <h4>
-                        <span class="news-source-tag tag-bmf">BMF</span>
-                        Haltefrist bei Krypto-Assets bleibt bei einem Jahr
-                    </h4>
-                    <p><strong>Erleichterung für Anleger:</strong> Entgegen ursprünglichen Befürchtungen hat das BMF klargestellt, dass die Nutzung von Kryptowährungen für Staking, Lending oder Liquidity Mining die Haltefrist für den privaten Veräußerungsgewinn nicht von 1 Jahr auf 10 Jahre verlängert. Gewinne aus der Veräußerung nach einem Jahr Haltedauer bleiben steuerfrei.</p>
-                    <p><strong>Dokumentationspflichten:</strong></p>
-                    <ul>
-                        <li>Steuerzahler sind in der Nachweispflicht für sämtliche Transaktionen.</li>
-                        <li>Die Nutzung automatisierter Krypto-Steuer-Tools wird vom Finanzamt empfohlen, sofern die Rohdaten (CSV-Exporte) archiviert sind.</li>
-                    </ul>
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); font-style: italic; margin-top: 32px;">
-                    Disclaimer: Dieser Report dient der Erstinformation und ersetzt keine individuelle Steuerberatung.
-                </p>
-            `
-        }
-    ];
+    // Pool of new reports to fetch via the button (Empty for production)
+    const fetchableReportsPool = [];
 
     // Initialize state
     let reports = [...initialReports];
-    let selectedReport = reports.find(r => r.id === 3); // Start with KW 24 report loaded in main area
+    let selectedReport = null;
     let poolIndex = 0;
 
     // DOM References
@@ -226,7 +79,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderCurrentReport() {
-        if (!selectedReport) return;
+        if (!selectedReport) {
+            if (reportTitle) reportTitle.innerText = "Kein Bericht geladen";
+            if (reportDate) reportDate.innerText = "";
+            if (reportDisplay) {
+                reportDisplay.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 60px 20px;">
+                        <svg viewBox="0 0 24 24" style="width: 64px; height: 64px; fill: currentColor; margin-bottom: 16px; opacity: 0.35;">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Kein Bericht ausgewählt</h3>
+                        <p style="max-width: 420px; font-size: 14px; line-height: 1.5;">Wähle links einen archivierten Steuer-Report aus oder klicke unten auf "Jetzt auf Neuigkeiten prüfen", um aktuelle News über den n8n-Webhook live abzurufen.</p>
+                    </div>
+                `;
+            }
+            if (saveBtn) saveBtn.style.display = "none";
+            if (deleteBtn) deleteBtn.style.display = "none";
+            return;
+        }
+
+        // Show buttons
+        if (saveBtn) saveBtn.style.display = "inline-flex";
 
         // Title and Date
         if (reportTitle) reportTitle.innerText = selectedReport.title;
@@ -299,6 +172,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (deleteBtnText) deleteBtnText.innerText = "Löschen";
                 deleteBtn.style.backgroundColor = "#FFF5F5";
                 deleteBtn.style.color = "#DC2626";
+
+                selectedReport = null; // Set to null to show empty state
 
                 renderCurrentReport();
                 renderArchive();

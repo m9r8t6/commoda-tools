@@ -1248,3 +1248,11 @@ body {
         max-width: none !important;
     }
 }
+
+#reportSourceLink {
+    transition: color 0.2s ease;
+}
+
+#reportSourceLink:hover {
+    color: var(--primary-color) !important;
+}

@@ -82,6 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedReport) {
             if (reportTitle) reportTitle.innerText = "Kein Bericht geladen";
             if (reportDate) reportDate.innerText = "";
+            const sourceLink = document.getElementById("reportSourceLink");
+            if (sourceLink) sourceLink.style.display = "none";
             if (reportDisplay) {
                 reportDisplay.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 60px 20px;">
@@ -104,6 +106,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // Title and Date
         if (reportTitle) reportTitle.innerText = selectedReport.title;
         if (reportDate) reportDate.innerText = `Datum: ${selectedReport.date}`;
+
+        // Update original source link next to title
+        const sourceLink = document.getElementById("reportSourceLink");
+        if (sourceLink) {
+            if (selectedReport.sourceUrl) {
+                sourceLink.href = selectedReport.sourceUrl;
+                sourceLink.style.display = "inline-flex";
+            } else {
+                sourceLink.style.display = "none";
+            }
+        }
 
         // Body Content
         if (reportDisplay) reportDisplay.innerHTML = selectedReport.htmlContent;
@@ -245,7 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     source: sourceLabel,
                     saved: false,
                     summary: `Live-Bericht für ${sourceLabel}.`,
-                    htmlContent: reportData.html_report
+                    htmlContent: reportData.html_report,
+                    sourceUrl: reportData.source_url || reportData.link || selectedSource
                 };
 
                 reports.push(fetchedReport);
@@ -272,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else if (selectedSource.includes("bundesfinanzministerium.de")) {
                     newReport.source = "BMF";
                 }
+                newReport.sourceUrl = selectedSource;
 
                 reports.push(newReport);
                 selectedReport = newReport;

@@ -23,19 +23,9 @@
                 Mitarbeitersuche
             </a>
 
-            <a href="#" class="nav-item" data-target="bewirtung" data-title="Bewirtungsbeleg-Checker">
-                <svg viewBox="0 0 24 24"><path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2L7.5 3.5 6 2 4.5 3.5 3 2v20z"/></svg>
-                Bewirtungsbeleg-Checker
-            </a>
-
             <a href="#" class="nav-item" data-target="diplomat" data-title="Kanzlei-Diplomat">
                 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
                 Kanzlei-Diplomat
-            </a>
-
-            <a href="#" class="nav-item" data-target="fristen" data-title="Fristen- & Einspruchs-Retter">
-                <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 3h5v5h-5z"/></svg>
-                Fristen- & Einspruchs-Retter
             </a>
         </nav>
 
@@ -111,29 +101,6 @@
                     <p class="loader-text">n8n durchsucht das Web...</p>
                 </div>
                 <div id="resultsGrid" class="results-grid"></div>
-            </div>
-
-            <div id="view-bewirtung" class="app-view">
-                <div class="tool-container">
-                    <div class="tool-title-desc">
-                        <h2>Bewirtungsbeleg-Formalien-Checker</h2>
-                        <p>Prüfe, ob dein Bewirtungsbeleg alle steuerlich erforderlichen Angaben enthält, um beim Betriebsprüfer standzuhalten.</p>
-                    </div>
-                    <div class="form-group">
-                        <label for="bewirtungText">Text des Belegs oder Angaben eingeben:</label>
-                        <textarea id="bewirtungText" class="form-textarea" placeholder="Z. B. Restaurant XY, Datum: 12.04.2026, Betrag: 124,50 EUR, Teilnehmer: Moritz B., Herr Schmidt. Anlass: Arbeitsgespräch. Trinkgeld bar gezahlt..."></textarea>
-                    </div>
-                    <button class="btn-primary" id="checkBewirtungBtn">Beleg prüfen</button>
-                    
-                    <div id="bewirtungLoader" class="loader-container" style="display: none;">
-                        <div class="spinner"></div>
-                        <p class="loader-text">DeepSeek prüft die Belegdaten...</p>
-                    </div>
-                    
-                    <div id="bewirtungResult" style="display: none;">
-                        <!-- Dynamic status card will be rendered here -->
-                    </div>
-                </div>
             </div>
 
             <div id="view-diplomat" class="app-view">
@@ -234,46 +201,6 @@
             </div>
 
 
-            <div id="view-fristen" class="app-view">
-                <div class="tool-container">
-                    <div class="tool-title-desc">
-                        <h2>Fristen- & Einspruchs-Retter (§ 108 AO)</h2>
-                        <p>Berechne die genaue Einspruchsfrist unter Berücksichtigung der 3-Tage-Bekanntgabefiktion und bayerischer Feiertage.</p>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                        <div>
-                            <div class="form-group">
-                                <label for="bescheidDate">Datum des Steuerbescheids:</label>
-                                <input type="date" id="bescheidDate" class="filter-input" style="width: 100%;">
-                            </div>
-                            <div class="form-group">
-                                <label class="checkbox-group">
-                                    <input type="checkbox" id="bekanntgabeFiktion" checked>
-                                    <span>3-Tage-Bekanntgabefiktion anwenden (§ 122 AO)</span>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label for="fristenRegion">Region (für Feiertage):</label>
-                                <select id="fristenRegion" class="filter-input" style="width: 100%;">
-                                    <option value="BY-Mittelfranken">Bayern (Mittelfranken / Nürnberg)</option>
-                                    <option value="BY-Allgemein">Bayern (Allgemein)</option>
-                                </select>
-                            </div>
-                            <button class="btn-primary" id="calcFristenBtn" style="width: 100%;">Frist berechnen</button>
-                        </div>
-                        <div>
-                            <h3>Berechnungsergebnis</h3>
-                            <div id="fristenResultEmpty" style="color: #6B7280; font-style: italic; margin-top: 16px;">
-                                Bitte gib ein Bescheidsdatum ein und klicke auf "Frist berechnen".
-                            </div>
-                            <div id="fristenTimeline" class="timeline" style="display: none;">
-                                <!-- Timeline event items go here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
 
             <div id="view-saved" class="app-view">
@@ -319,9 +246,7 @@
     <script src="js/config.js?v=1"></script>
     <script src="js/navigation.js"></script>
     <script src="js/app-mitarbeiter.js"></script>
-    <script src="js/app-bewirtung.js"></script>
     <script src="js/app-diplomat.js?v=2"></script>
-    <script src="js/app-fristen.js"></script>
     <script src="js/app-settings.js"></script>
     <script>
     if ('serviceWorker' in navigator) {

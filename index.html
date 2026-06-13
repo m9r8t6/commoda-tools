@@ -27,6 +27,11 @@
                 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
                 Kanzlei-Diplomat
             </a>
+
+            <a href="#" class="nav-item" data-target="news" data-title="BMF / Haufe News-Aggregator">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                BMF / Haufe News
+            </a>
         </nav>
 
         <div class="user-profile">
@@ -201,6 +206,50 @@
             </div>
 
 
+            <div id="view-news" class="app-view">
+                <div class="news-container">
+                    <!-- Left Pane: Archive -->
+                    <aside class="news-archive">
+                        <div class="archive-search-container">
+                            <input type="text" id="newsSearchInput" class="filter-input" placeholder="Ask AI about saved reports..." style="width: 100%;">
+                        </div>
+                        <div class="archive-list" id="archiveList">
+                            <!-- Dynamic list of saved reports -->
+                        </div>
+                    </aside>
+
+                    <!-- Right Pane: Main Content -->
+                    <main class="news-main">
+                        <!-- Top Section: Selected Report -->
+                        <div class="report-content-wrapper" id="reportContentWrapper">
+                            <div class="report-header">
+                                <div class="report-title-meta">
+                                    <h2 id="reportTitle">Wöchentlicher BMF & Haufe Steuer-Report</h2>
+                                    <span id="reportDate" class="report-date">Datum: 13.06.2026</span>
+                                </div>
+                                <button class="btn-secondary btn-icon" id="saveArchiveBtn" title="In Archiv speichern">
+                                    <svg viewBox="0 0 24 24" class="icon-bookmark" id="bookmarkIcon" style="width: 16px; height: 16px; fill: currentColor; display: inline-block; vertical-align: middle;">
+                                        <path id="bookmarkPath" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                                    </svg>
+                                    <span id="saveBtnText">Im Archiv speichern</span>
+                                </button>
+                            </div>
+                            <hr class="report-divider">
+                            <div class="report-body" id="reportDisplay">
+                                <!-- Dynamic rich text summary -->
+                            </div>
+                        </div>
+
+                        <!-- Bottom Section: Fetch Data -->
+                        <div class="news-footer">
+                            <button class="btn-primary" id="fetchNewsBtn">
+                                <span class="btn-text">Jetzt auf Neuigkeiten prüfen</span>
+                                <div class="spinner-small" id="newsSpinner" style="display: none;"></div>
+                            </button>
+                        </div>
+                    </main>
+                </div>
+            </div>
 
 
             <div id="view-saved" class="app-view">
@@ -248,6 +297,7 @@
     <script src="js/app-mitarbeiter.js"></script>
     <script src="js/app-diplomat.js?v=2"></script>
     <script src="js/app-settings.js"></script>
+    <script src="js/app-news.js"></script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

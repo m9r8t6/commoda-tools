@@ -1287,3 +1287,112 @@ body {
 .report-body a:hover::after {
     filter: brightness(0) invert(1);
 }
+
+/* Starred Links Styles & In-text Bookmark Stars */
+.report-link-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    vertical-align: middle;
+}
+
+.link-star-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background-color: var(--active-bg);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 28px;
+    width: 28px;
+    margin-top: 6px;
+    color: var(--text-muted);
+}
+
+.link-star-btn:hover {
+    background-color: var(--bg-color);
+    transform: scale(1.05);
+}
+
+.link-star-btn.starred {
+    background-color: #FEF9C3 !important; /* light yellow */
+    border-color: #FEF08A !important;
+    color: #EAB308 !important; /* gold star */
+    box-shadow: 0 1px 3px rgba(234, 179, 8, 0.1);
+}
+
+.starred-link-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.starred-link-item:hover {
+    background-color: var(--bg-color);
+    border-color: rgba(139, 92, 246, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.starred-link-anchor {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-main);
+    text-decoration: none;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.2s;
+    line-height: 1.4;
+}
+
+.starred-link-anchor:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.starred-link-source {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unstar-btn {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    color: #EAB308;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.unstar-btn:hover {
+    background-color: #FEF9C3;
+    transform: scale(1.1);
+}
+
+.unstar-btn svg {
+    width: 16px;
+    height: 16px;
+}

@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize state from localStorage
     let reports = JSON.parse(localStorage.getItem("savedNewsReports") || "[]");
+    let starredLinks = JSON.parse(localStorage.getItem("starredNewsLinks") || "[]");
     let selectedReport = null;
     let poolIndex = 0;
 
@@ -106,7 +107,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (reportDate) reportDate.innerText = `Datum: ${selectedReport.date}`;
 
         // Body Content
-        if (reportDisplay) reportDisplay.innerHTML = selectedReport.htmlContent;
+        if (reportDisplay) {
+            reportDisplay.innerHTML = selectedReport.htmlContent;
+            processReportLinks(reportDisplay);
+        }
 
         // Bookmark Button State
         if (saveBtn && bookmarkPath && saveBtnText) {
@@ -141,6 +145,163 @@ document.addEventListener("DOMContentLoaded", () => {
         // Scroll to top of report content
         const wrapper = document.getElementById("reportContentWrapper");
         if (wrapper) wrapper.scrollTop = 0;
+    }
+
+    // --- LINK BOOKMARKING LOGIC ---
+
+    function processReportLinks(container) {
+        if (!container) return;
+        const anchors = container.querySelectorAll("a");
+        anchors.forEach(a => {
+            if (a.dataset.linkProcessed) return;
+            a.dataset.linkProcessed = "true";
+
+            const href = a.getAttribute("href");
+            if (!href) return;
+            const text = a.textContent.trim() || href;
+
+            // Wrap anchor and star button in a span to keep them together
+            const wrapper = document.createElement("span");
+            wrapper.className = "report-link-wrapper";
+
+            // Insert wrapper before anchor
+            a.parentNode.insertBefore(wrapper, a);
+            // Move anchor inside wrapper
+            wrapper.appendChild(a);
+
+            // Create star button
+            const starBtn = document.createElement("button");
+            starBtn.className = "link-star-btn";
+            
+            // Check if starred
+            const isStarred = starredLinks.some(link => link.url === href);
+            updateStarButtonState(starBtn, isStarred);
+
+            starBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleStarLink(href, text, selectedReport ? selectedReport.title : "Steuer-News", starBtn);
+            });
+
+            wrapper.appendChild(starBtn);
+        });
+    }
+
+    function updateStarButtonState(btn, isStarred) {
+        if (isStarred) {
+            btn.classList.add("starred");
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`;
+            btn.setAttribute("title", "Link gemerkt");
+        } else {
+            btn.classList.remove("starred");
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg>`;
+            btn.setAttribute("title", "Link merken");
+        }
+    }
+
+    function toggleStarLink(url, text, sourceTitle, btn) {
+        const index = starredLinks.findIndex(link => link.url === url);
+        if (index > -1) {
+            // Already starred, remove it
+            starredLinks.splice(index, 1);
+        } else {
+            // Add new starred link
+            starredLinks.push({
+                url: url,
+                text: text,
+                source: sourceTitle,
+                timestamp: Date.now()
+            });
+        }
+
+        // Persist to localStorage
+        localStorage.setItem("starredNewsLinks", JSON.stringify(starredLinks));
+
+        // Re-render the starred links list in the sidebar
+        renderStarredLinks();
+
+        // Update all star buttons inside the current report that match this URL
+        if (reportDisplay) {
+            const btns = reportDisplay.querySelectorAll(".link-star-btn");
+            btns.forEach(b => {
+                const siblingLink = b.previousElementSibling;
+                if (siblingLink && siblingLink.tagName === "A" && siblingLink.getAttribute("href") === url) {
+                    const isStarred = starredLinks.some(link => link.url === url);
+                    updateStarButtonState(b, isStarred);
+                }
+            });
+        }
+    }
+
+    function removeStarredLink(url) {
+        starredLinks = starredLinks.filter(link => link.url !== url);
+        
+        // Persist to localStorage
+        localStorage.setItem("starredNewsLinks", JSON.stringify(starredLinks));
+
+        // Re-render list
+        renderStarredLinks();
+
+        // Update any matching buttons in the report display
+        if (reportDisplay) {
+            const btns = reportDisplay.querySelectorAll(".link-star-btn");
+            btns.forEach(b => {
+                const siblingLink = b.previousElementSibling;
+                if (siblingLink && siblingLink.tagName === "A" && siblingLink.getAttribute("href") === url) {
+                    updateStarButtonState(b, false);
+                }
+            });
+        }
+    }
+
+    function renderStarredLinks() {
+        const listContainer = document.getElementById("starredLinksList");
+        const countBadge = document.getElementById("starred-links-count");
+        if (!listContainer) return;
+
+        listContainer.innerHTML = "";
+
+        if (countBadge) {
+            countBadge.innerText = starredLinks.length;
+        }
+
+        if (starredLinks.length === 0) {
+            listContainer.innerHTML = `
+                <div style="padding: 16px; color: var(--text-muted); font-style: italic; text-align: center; font-size: 13px;">
+                    Keine markierten Links
+                </div>`;
+            return;
+        }
+
+        // Sort by timestamp if available, latest first
+        const sortedLinks = [...starredLinks].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+        sortedLinks.forEach(link => {
+            const item = document.createElement("div");
+            item.className = "starred-link-item";
+            item.innerHTML = `
+                <div style="flex: 1; min-width: 0;">
+                    <a href="${link.url}" target="_blank" class="starred-link-anchor" title="${link.text}">
+                        ${link.text}
+                    </a>
+                    <div class="starred-link-source" title="Quelle: ${link.source}">
+                        Quelle: ${link.source}
+                    </div>
+                </div>
+                <button class="unstar-btn" title="Link entfernen">
+                    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </button>
+            `;
+
+            const unstarBtn = item.querySelector(".unstar-btn");
+            unstarBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                removeStarredLink(link.url);
+            });
+
+            listContainer.appendChild(item);
+        });
     }
 
     // --- EVENT LISTENERS ---
@@ -312,6 +473,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- INITIALIZATION ---
     renderArchive();
     renderCurrentReport();
+    renderStarredLinks();
 
     // Attach listener to sidebar links so it updates when switching views
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -320,6 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (target === 'news') {
                 renderArchive();
                 renderCurrentReport();
+                renderStarredLinks();
             }
         });
     });

@@ -5,8 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Pool of new reports to fetch via the button (Empty for production)
     const fetchableReportsPool = [];
 
-    // Initialize state
-    let reports = [...initialReports];
+    // Initialize state from localStorage
+    let reports = JSON.parse(localStorage.getItem("savedNewsReports") || "[]");
     let selectedReport = null;
     let poolIndex = 0;
 
@@ -163,6 +163,16 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.addEventListener("click", () => {
             if (selectedReport && !selectedReport.saved) {
                 selectedReport.saved = true;
+                
+                // Add to reports list if not already present
+                if (!reports.some(r => r.id === selectedReport.id)) {
+                    reports.push(selectedReport);
+                }
+
+                // Persist only saved reports in localStorage
+                const savedReports = reports.filter(r => r.saved);
+                localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
+
                 renderCurrentReport();
                 renderArchive();
             }
@@ -185,6 +195,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (deleteBtnText) deleteBtnText.innerText = "Löschen";
                 deleteBtn.style.backgroundColor = "#FFF5F5";
                 deleteBtn.style.color = "#DC2626";
+
+                // Filter out the deleted report
+                reports = reports.filter(r => r.id !== selectedReport.id);
+
+                // Persist the updated archive
+                const savedReports = reports.filter(r => r.saved);
+                localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
 
                 selectedReport = null; // Set to null to show empty state
 

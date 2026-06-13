@@ -1249,10 +1249,41 @@ body {
     }
 }
 
-#reportSourceLink {
-    transition: color 0.2s ease;
+/* Styling for links inside report body */
+.report-body a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background-color: var(--active-bg);
+    border-radius: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    font-size: 13px;
+    margin-top: 6px;
+    cursor: pointer;
 }
 
-#reportSourceLink:hover {
-    color: var(--primary-color) !important;
+.report-body a:hover {
+    background-color: var(--primary-color);
+    color: white !important;
+    border-color: var(--primary-color);
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.15);
+}
+
+.report-body a::after {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="%238B5CF6"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>');
+    display: inline-block;
+    line-height: 1;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: filter 0.2s;
+}
+
+.report-body a:hover::after {
+    filter: brightness(0) invert(1);
 }

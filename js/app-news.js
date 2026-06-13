@@ -82,8 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedReport) {
             if (reportTitle) reportTitle.innerText = "Kein Bericht geladen";
             if (reportDate) reportDate.innerText = "";
-            const sourceLink = document.getElementById("reportSourceLink");
-            if (sourceLink) sourceLink.style.display = "none";
             if (reportDisplay) {
                 reportDisplay.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); text-align: center; padding: 60px 20px;">
@@ -106,17 +104,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Title and Date
         if (reportTitle) reportTitle.innerText = selectedReport.title;
         if (reportDate) reportDate.innerText = `Datum: ${selectedReport.date}`;
-
-        // Update original source link next to title
-        const sourceLink = document.getElementById("reportSourceLink");
-        if (sourceLink) {
-            if (selectedReport.sourceUrl) {
-                sourceLink.href = selectedReport.sourceUrl;
-                sourceLink.style.display = "inline-flex";
-            } else {
-                sourceLink.style.display = "none";
-            }
-        }
 
         // Body Content
         if (reportDisplay) reportDisplay.innerHTML = selectedReport.htmlContent;

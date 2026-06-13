@@ -1237,9 +1237,14 @@ body {
     
     .news-footer {
         padding: 16px 20px;
+        flex-direction: column;
+        gap: 12px !important;
+        align-items: stretch;
     }
     
-    .news-footer button {
-        width: 100%;
+    .news-footer button,
+    .news-footer select {
+        width: 100% !important;
+        max-width: none !important;
     }
 }

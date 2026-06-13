@@ -321,39 +321,103 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.addEventListener("input", renderArchive);
     }
 
+    function getSourceLabel(url) {
+        if (url.includes("haufe.de")) return "Haufe";
+        if (url.includes("nwb.de")) return "NWB";
+        if (url.includes("bundesfinanzministerium.de")) return "BMF";
+        return "Mix Feed";
+    }
+
     // Fetch news button handler
     if (fetchBtn) {
         fetchBtn.addEventListener("click", () => {
-            if (poolIndex >= fetchableReportsPool.length) {
-                alert("Keine weiteren Neuigkeiten im Pool vorhanden.");
-                return;
-            }
+            const sourceFilter = document.getElementById("news-source-filter");
+            const selectedSource = sourceFilter ? sourceFilter.value : "";
 
             // Disable button and show spinner
             fetchBtn.disabled = true;
+            if (sourceFilter) sourceFilter.disabled = true;
             if (spinner) spinner.style.display = "inline-block";
             const originalText = fetchBtn.querySelector(".btn-text");
             if (originalText) originalText.innerText = "Prüfe Feeds...";
 
-            // Simulate network latency (1.5 seconds)
-            setTimeout(() => {
-                // Fetch next report from pool
+            const webhookUrl = `${window.APP_CONFIG.API_BASE_URL || 'https://n8n.baeuerlein-dev.de'}/webhook-test/fetch-tax-news`;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sourceUrl: selectedSource })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Netzwerkantwort war nicht ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                let reportData = Array.isArray(data) ? data[0] : data;
+                
+                if (!reportData || (!reportData.title && !reportData.htmlContent && !reportData.content)) {
+                    throw new Error("Ungültiges Datenformat erhalten");
+                }
+
+                const fetchedReport = {
+                    id: Date.now(),
+                    title: reportData.title || `Steuer-News (${getSourceLabel(selectedSource)})`,
+                    date: reportData.date || new Date().toLocaleDateString("de-DE"),
+                    source: reportData.source || getSourceLabel(selectedSource),
+                    saved: false,
+                    summary: reportData.summary || "Live abgerufene Steuer-News.",
+                    htmlContent: reportData.htmlContent || reportData.content || `
+                        <div class="news-section-card">
+                            <h4>
+                                <span class="news-source-tag ${selectedSource.includes("bundesfinanzministerium.de") ? "tag-bmf" : "tag-haufe"}">${getSourceLabel(selectedSource)}</span>
+                                Live-Bericht geladen
+                            </h4>
+                            <p>${reportData.text || JSON.stringify(reportData)}</p>
+                        </div>
+                    `
+                };
+
+                reports.push(fetchedReport);
+                selectedReport = fetchedReport;
+
+                resetFetchUI();
+                renderCurrentReport();
+                renderArchive();
+            })
+            .catch(error => {
+                console.warn("Webhook-Fehler, nutze Offline-Fallback:", error);
+
+                if (poolIndex >= fetchableReportsPool.length) {
+                    alert("Keine weiteren Offline-Berichte verfügbar und Webhook-Verbindung fehlgeschlagen.");
+                    resetFetchUI();
+                    return;
+                }
+
                 const newReport = fetchableReportsPool[poolIndex];
                 poolIndex++;
 
-                // Add to reports array (but not yet saved to archive)
+                if (selectedSource.includes("haufe.de")) {
+                    newReport.source = "Haufe";
+                } else if (selectedSource.includes("bundesfinanzministerium.de")) {
+                    newReport.source = "BMF";
+                }
+
                 reports.push(newReport);
                 selectedReport = newReport;
 
-                // Restore button state
-                fetchBtn.disabled = false;
-                if (spinner) spinner.style.display = "none";
-                if (originalText) originalText.innerText = "Jetzt auf Neuigkeiten prüfen";
-
-                // Render updated UI
+                resetFetchUI();
                 renderCurrentReport();
                 renderArchive();
-            }, 1500);
+            });
+
+            function resetFetchUI() {
+                fetchBtn.disabled = false;
+                if (sourceFilter) sourceFilter.disabled = false;
+                if (spinner) spinner.style.display = "none";
+                if (originalText) originalText.innerText = "Jetzt auf Neuigkeiten prüfen";
+            }
         });
     }
 

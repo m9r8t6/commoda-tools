@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
     const logoutBtn = document.getElementById('logoutBtn');
+    const settingsLogoutBtn = document.getElementById('settingsLogoutBtn');
 
     const extractNameFromEmail = (email) => {
         if (!email) return "Benutzer";
@@ -26,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const name = localStorage.getItem('userName') || 'Benutzer';
             const email = localStorage.getItem('userEmail') || 'user@firma.de';
             
+            // Update sidebar elements
             const profileName = document.getElementById('profileName');
             const profileEmail = document.getElementById('profileEmail');
             const avatar = document.querySelector('.user-profile .avatar');
@@ -34,6 +36,17 @@ document.addEventListener("DOMContentLoaded", () => {
             if (profileEmail) profileEmail.innerText = email;
             if (avatar) {
                 avatar.style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=D1D5DB&color=111827')`;
+            }
+
+            // Update settings panel elements
+            const settingsName = document.getElementById('settingsName');
+            const settingsEmail = document.getElementById('settingsEmail');
+            const settingsAvatar = document.getElementById('settingsAvatar');
+
+            if (settingsName) settingsName.innerText = name;
+            if (settingsEmail) settingsEmail.innerText = email;
+            if (settingsAvatar) {
+                settingsAvatar.style.backgroundImage = `url('https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=8B5CF6&color=FFFFFF')`;
             }
         } else {
             if (loginScreen) loginScreen.style.display = 'flex';
@@ -61,14 +74,20 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    const performLogout = (e) => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userName');
+        checkLoginStatus();
+    };
+
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userName');
-            checkLoginStatus();
-        });
+        logoutBtn.addEventListener('click', performLogout);
+    }
+
+    if (settingsLogoutBtn) {
+        settingsLogoutBtn.addEventListener('click', performLogout);
     }
 
     checkLoginStatus();

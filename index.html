@@ -227,12 +227,20 @@
                                     <h2 id="reportTitle">Wöchentlicher BMF & Haufe Steuer-Report</h2>
                                     <span id="reportDate" class="report-date">Datum: 13.06.2026</span>
                                 </div>
-                                <button class="btn-secondary btn-icon" id="saveArchiveBtn" title="In Archiv speichern">
-                                    <svg viewBox="0 0 24 24" class="icon-bookmark" id="bookmarkIcon" style="width: 16px; height: 16px; fill: currentColor; display: inline-block; vertical-align: middle;">
-                                        <path id="bookmarkPath" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
-                                    </svg>
-                                    <span id="saveBtnText">Im Archiv speichern</span>
-                                </button>
+                                <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
+                                    <button class="btn-secondary btn-icon" id="saveArchiveBtn" title="In Archiv speichern">
+                                        <svg viewBox="0 0 24 24" class="icon-bookmark" id="bookmarkIcon" style="width: 16px; height: 16px; fill: currentColor; display: inline-block; vertical-align: middle;">
+                                            <path id="bookmarkPath" d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
+                                        </svg>
+                                        <span id="saveBtnText">Im Archiv speichern</span>
+                                    </button>
+                                    <button class="btn-secondary btn-icon" id="deleteArchiveBtn" title="Aus Archiv löschen" style="display: none; border-color: #DC2626; color: #DC2626; background: #FFF5F5;">
+                                        <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: currentColor; display: inline-block; vertical-align: middle;">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                        </svg>
+                                        <span id="deleteBtnText">Löschen</span>
+                                    </button>
+                                </div>
                             </div>
                             <hr class="report-divider">
                             <div class="report-body" id="reportDisplay">

@@ -165,9 +165,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveBtn = document.getElementById("saveArchiveBtn");
     const bookmarkPath = document.getElementById("bookmarkPath");
     const saveBtnText = document.getElementById("saveBtnText");
+    const deleteBtn = document.getElementById("deleteArchiveBtn");
+    const deleteBtnText = document.getElementById("deleteBtnText");
     const reportDisplay = document.getElementById("reportDisplay");
     const fetchBtn = document.getElementById("fetchNewsBtn");
     const spinner = document.getElementById("newsSpinner");
+
+    let deleteConfirmActive = false;
 
     // SVG paths for Bookmark button icon
     const bookmarkFilledPath = "M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z";
@@ -248,6 +252,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        // Delete Button State & Confirmation Reset
+        deleteConfirmActive = false;
+        if (deleteBtnText) deleteBtnText.innerText = "Löschen";
+        if (deleteBtn) {
+            deleteBtn.style.backgroundColor = "#FFF5F5";
+            deleteBtn.style.color = "#DC2626";
+            if (selectedReport.saved) {
+                deleteBtn.style.display = "inline-flex";
+            } else {
+                deleteBtn.style.display = "none";
+            }
+        }
+
         // Scroll to top of report content
         const wrapper = document.getElementById("reportContentWrapper");
         if (wrapper) wrapper.scrollTop = 0;
@@ -262,6 +279,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedReport.saved = true;
                 renderCurrentReport();
                 renderArchive();
+            }
+        });
+    }
+
+    // Delete current report from archive (with double confirmation)
+    if (deleteBtn) {
+        deleteBtn.addEventListener("click", () => {
+            if (!selectedReport || !selectedReport.saved) return;
+
+            if (!deleteConfirmActive) {
+                deleteConfirmActive = true;
+                if (deleteBtnText) deleteBtnText.innerText = "Bericht Wirklich Löschen?";
+                deleteBtn.style.backgroundColor = "#DC2626";
+                deleteBtn.style.color = "#FFFFFF";
+            } else {
+                selectedReport.saved = false;
+                deleteConfirmActive = false;
+                if (deleteBtnText) deleteBtnText.innerText = "Löschen";
+                deleteBtn.style.backgroundColor = "#FFF5F5";
+                deleteBtn.style.color = "#DC2626";
+
+                renderCurrentReport();
+                renderArchive();
+            }
+        });
+
+        // Reset confirmation state if cursor leaves the button to prevent accidental clicks
+        deleteBtn.addEventListener("mouseleave", () => {
+            if (deleteConfirmActive) {
+                deleteConfirmActive = false;
+                if (deleteBtnText) deleteBtnText.innerText = "Löschen";
+                deleteBtn.style.backgroundColor = "#FFF5F5";
+                deleteBtn.style.color = "#DC2626";
             }
         });
     }

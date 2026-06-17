@@ -403,7 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetchWeeklyReportBtn.disabled = true;
             if (weeklySpinner) weeklySpinner.style.display = "inline-block";
             const originalText = fetchWeeklyReportBtn.querySelector(".btn-text");
-            if (originalText) originalText.innerText = "Generiere...";
+            if (originalText) originalText.innerText = "Lade...";
 
             // Placeholder webhook for weekly report
             const webhookUrl = `${window.APP_CONFIG.API_BASE_URL}/webhook/fetch-weekly-report`;
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", () => {
             function resetWeeklyUI() {
                 fetchWeeklyReportBtn.disabled = false;
                 if (weeklySpinner) weeklySpinner.style.display = "none";
-                if (originalText) originalText.innerText = "Bericht generieren";
+                if (originalText) originalText.innerText = "Wöchentlicher Bericht";
             }
         });
     }

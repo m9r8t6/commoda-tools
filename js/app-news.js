@@ -302,22 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.addEventListener("input", renderArchive);
     }
 
-    function getSourceLabel(url) {
-        if (url.includes("haufe.de")) return "Haufe";
-        if (url.includes("nwb.de")) return "NWB";
-        if (url.includes("bundesfinanzministerium.de")) return "BMF";
-        return "Mix Feed";
-    }
-
     // Fetch news button handler
     if (fetchBtn) {
         fetchBtn.addEventListener("click", () => {
-            const sourceFilter = document.getElementById("news-source-filter");
-            const selectedSource = sourceFilter ? sourceFilter.value : "";
-
             // Disable button and show spinner
             fetchBtn.disabled = true;
-            if (sourceFilter) sourceFilter.disabled = true;
             if (spinner) spinner.style.display = "inline-block";
             const originalText = fetchBtn.querySelector(".btn-text");
             if (originalText) originalText.innerText = "Prüfe Feeds...";
@@ -327,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sourceUrl: selectedSource })
+                body: JSON.stringify({})
             })
             .then(response => {
                 if (!response.ok) {
@@ -343,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error("Ungültiges Datenformat vom Webhook erhalten");
                 }
 
-                const sourceLabel = getSourceLabel(selectedSource);
+                const sourceLabel = "Alle Quellen";
                 const fetchedReport = {
                     id: Date.now(),
                     title: `Steuer-News (${sourceLabel})`,
@@ -352,7 +341,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     saved: false,
                     summary: `Live-Bericht für ${sourceLabel}.`,
                     htmlContent: reportData.html_report,
-                    sourceUrl: reportData.source_url || reportData.link || selectedSource
+                    sourceUrl: reportData.source_url || reportData.link || ""
                 };
 
                 reports.push(fetchedReport);
@@ -373,13 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const newReport = fetchableReportsPool[poolIndex];
                 poolIndex++;
-
-                if (selectedSource.includes("haufe.de")) {
-                    newReport.source = "Haufe";
-                } else if (selectedSource.includes("bundesfinanzministerium.de")) {
-                    newReport.source = "BMF";
-                }
-                newReport.sourceUrl = selectedSource;
+                newReport.sourceUrl = "";
 
                 reports.push(newReport);
                 selectedReport = newReport;
@@ -391,7 +374,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             function resetFetchUI() {
                 fetchBtn.disabled = false;
-                if (sourceFilter) sourceFilter.disabled = false;
                 if (spinner) spinner.style.display = "none";
                 if (originalText) originalText.innerText = "Jetzt auf Neuigkeiten prüfen";
             }

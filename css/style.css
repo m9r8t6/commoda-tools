@@ -1409,10 +1409,17 @@ body {
 
 
 @media print {
-    .sidebar, .news-archive, .news-footer, #downloadPdfBtn, #saveArchiveBtn, #deleteArchiveBtn, .edit-title-icon {
+    @page {
+        margin: 2.5cm;
+    }
+
+    /* Hide UI Elements */
+    .sidebar, .news-archive, .news-footer, #downloadPdfBtn, #saveArchiveBtn, #deleteArchiveBtn, .edit-title-icon, .link-star-btn, .report-link-wrapper > button {
         display: none !important;
     }
-    .main-content, .news-main, .news-container, .report-content-wrapper {
+
+    /* Reset layout for print */
+    html, body, .main-content, .news-main, .news-container, .report-content-wrapper, .report-body {
         width: 100% !important;
         max-width: 100% !important;
         height: auto !important;
@@ -1420,10 +1427,85 @@ body {
         padding: 0 !important;
         margin: 0 !important;
         border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
     }
-    body {
-        background: white !important;
-        color: black !important;
+
+    /* Word-like classic formatting */
+    body, .report-body, #reportTitle, .report-date, .report-header {
+        font-family: "Times New Roman", Times, serif !important;
+        color: #000 !important;
+    }
+
+    .report-body {
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+        text-align: justify !important;
+    }
+
+    #reportTitle {
+        font-size: 18pt !important;
+        font-weight: bold !important;
+        margin-bottom: 0.5cm !important;
+        text-align: center !important;
+        border: none !important;
+    }
+
+    .report-date {
+        font-size: 11pt !important;
+        display: block !important;
+        text-align: center !important;
+        margin-bottom: 1cm !important;
+        font-style: normal !important;
+    }
+
+    .report-header {
+        border: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+    
+    .report-title-meta {
+        display: block !important;
+    }
+
+    .report-title-container {
+        display: block !important;
+    }
+
+    .report-body h1, .report-body h2, .report-body h3, .report-body h4 {
+        font-family: "Times New Roman", Times, serif !important;
+        color: #000 !important;
+        margin-top: 1.5em !important;
+        margin-bottom: 0.5em !important;
+        page-break-after: avoid;
+    }
+
+    .report-body p, .report-body ul, .report-body ol, .report-body li {
+        margin-bottom: 1em !important;
+    }
+
+    /* Make links explicitly visible */
+    .report-body a {
+        color: #000 !important;
+        text-decoration: underline !important;
+    }
+    .report-body a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 10pt !important;
+        word-break: break-all !important;
+        color: #333 !important;
+    }
+
+    /* Remove interactive wrappers */
+    .report-link-wrapper {
+        display: inline !important;
+    }
+
+    /* Avoid page breaks inside paragraphs and lists */
+    .report-body p, .report-body li {
+        page-break-inside: avoid;
     }
 }
 

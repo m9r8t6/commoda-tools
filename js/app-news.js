@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let starredLinks = JSON.parse(localStorage.getItem("starredNewsLinks") || "[]");
     let selectedReport = null;
     let poolIndex = 0;
+    let isFetchingArchive = true;
 
     // DOM References
     const archiveList = document.getElementById("archiveList");
@@ -38,6 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderArchive() {
         if (!archiveList) return;
+        
+        if (isFetchingArchive && reports.length === 0) {
+            archiveList.innerHTML = `
+                <div style="padding: 30px 16px; text-align: center;">
+                    <div class="spinner-small" style="border-color: var(--primary-color); border-bottom-color: transparent; width: 22px; height: 22px; margin: 0 auto 12px auto; display: inline-block;"></div>
+                    <div style="color: var(--primary-color); font-size: 13px; font-weight: 600;">Lade Datenbank...</div>
+                </div>`;
+            return;
+        }
+
         archiveList.innerHTML = "";
         
         const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
@@ -598,6 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
     })
     .then(data => {
+        isFetchingArchive = false;
         console.log("Geladene Daten aus get-archive:", data);
         if (data && Array.isArray(data.data)) {
             data.data.forEach(article => {
@@ -625,10 +637,13 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         } else {
             console.warn("Unerwartetes Datenformat:", data);
+            renderArchive();
         }
     })
     .catch(err => {
+        isFetchingArchive = false;
         console.error("Konnte das Archiv nicht laden:", err);
+        renderArchive();
     });
 
     renderArchive();

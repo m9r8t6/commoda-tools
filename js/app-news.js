@@ -544,6 +544,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- INITIALIZATION ---
+
+    function formatTextToHTML(text) {
+        if (!text) return "<p>Kein Text verfügbar.</p>";
+        // Einfache Umwandlung von Text zu HTML-Paragraphen
+        const paragraphs = text.split(/\n\s*\n/);
+        let html = '<div class="report-body" style="padding: 20px;">';
+        paragraphs.forEach(p => {
+            const lines = p.trim().replace(/\n/g, "<br>");
+            html += `<p style="margin-bottom: 1em; line-height: 1.6;">${lines}</p>`;
+        });
+        html += '</div>';
+        return html;
+    }
+
+    // Lade gespeicherte Berichte aus der Datenbank
+    fetch("https://n8n.baeuerlein-dev.de/webhook/get-archive", {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Fehler beim Laden des Archivs");
+        return res.json();
+    })
+    .then(data => {
+        if (data && data.result && Array.isArray(data.result.points)) {
+            data.result.points.forEach(point => {
+                if (point.payload) {
+                    const fetchedReport = {
+                        id: point.id,
+                        title: point.payload.title || "Gespeicherter Bericht",
+                        date: point.payload.date ? new Date(point.payload.date).toLocaleDateString("de-DE") : "Unbekannt",
+                        source: "Datenbank",
+                        saved: true,
+                        summary: "Aus der Datenbank geladen.",
+                        htmlContent: formatTextToHTML(point.payload.text),
+                        sourceUrl: point.payload.url || ""
+                    };
+                    reports.push(fetchedReport);
+                }
+            });
+            renderArchive();
+        }
+    })
+    .catch(err => {
+        console.error("Konnte das Archiv nicht laden:", err);
+    });
+
     renderArchive();
     renderCurrentReport();
 

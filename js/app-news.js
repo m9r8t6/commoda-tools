@@ -307,19 +307,47 @@ document.addEventListener("DOMContentLoaded", () => {
                 deleteBtn.style.backgroundColor = "#DC2626";
                 deleteBtn.style.color = "#FFFFFF";
             } else {
-                selectedReport.saved = false;
-                deleteConfirmActive = false;
-                if (deleteBtnText) deleteBtnText.innerText = "Löschen";
-                deleteBtn.style.backgroundColor = "#FFF5F5";
-                deleteBtn.style.color = "#DC2626";
+                const reportIdToDelete = selectedReport.id;
+                
+                // Show loading state
+                deleteBtn.disabled = true;
+                if (deleteBtnText) deleteBtnText.innerText = "Löscht...";
 
-                // Filter out the deleted report
-                reports = reports.filter(r => r.id !== selectedReport.id);
+                fetch("https://n8n.baeuerlein-dev.de/webhook/delete-article", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: reportIdToDelete })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error("Fehler beim Löschen via Webhook");
+                    
+                    deleteConfirmActive = false;
+                    deleteBtn.disabled = false;
+                    if (deleteBtnText) deleteBtnText.innerText = "Löschen";
+                    deleteBtn.style.backgroundColor = "#FFF5F5";
+                    deleteBtn.style.color = "#DC2626";
 
-                selectedReport = null; // Set to null to show empty state
+                    // Remove from local memory
+                    reports = reports.filter(r => r.id !== reportIdToDelete);
 
-                renderCurrentReport();
-                renderArchive();
+                    // Clear currently selected report if it was the deleted one
+                    if (selectedReport && selectedReport.id === reportIdToDelete) {
+                        selectedReport.saved = false;
+                        selectedReport = null;
+                    }
+
+                    renderCurrentReport();
+                    renderArchive();
+                })
+                .catch(err => {
+                    console.error("Fehler beim Löschen:", err);
+                    alert("Konnte den Artikel nicht aus der Datenbank löschen.");
+                    deleteConfirmActive = false;
+                    deleteBtn.disabled = false;
+                    if (deleteBtnText) deleteBtnText.innerText = "Löschen";
+                    deleteBtn.style.backgroundColor = "#FFF5F5";
+                    deleteBtn.style.color = "#DC2626";
+                });
             }
         });
 

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fetchableReportsPool = [];
 
     // Initialize state from localStorage
-    let reports = JSON.parse(localStorage.getItem("savedNewsReports") || "[]");
+    let reports = [];
     let starredLinks = JSON.parse(localStorage.getItem("starredNewsLinks") || "[]");
     let selectedReport = null;
     let poolIndex = 0;
@@ -244,23 +244,54 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Save current report to archive
+    // Save current report to database via Webhook
     if (saveBtn) {
         saveBtn.addEventListener("click", () => {
             if (selectedReport && !selectedReport.saved) {
-                selectedReport.saved = true;
-                
-                // Add to reports list if not already present
-                if (!reports.some(r => r.id === selectedReport.id)) {
-                    reports.push(selectedReport);
-                }
+                // Extrahiere den reinen Text aus dem HTML
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = selectedReport.htmlContent || "";
+                const plainText = tempDiv.innerText || tempDiv.textContent || "";
 
-                // Persist only saved reports in localStorage
-                const savedReports = reports.filter(r => r.saved);
-                localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
+                const payload = {
+                    title: selectedReport.title || "Steuer-News",
+                    text: plainText,
+                    url: selectedReport.sourceUrl || "",
+                    date: new Date().toISOString()
+                };
 
-                renderCurrentReport();
-                renderArchive();
+                const saveWebhookUrl = "https://n8n.baeuerlein-dev.de/webhook/save-article";
+
+                // Zeige Ladezustand an
+                const originalBtnText = saveBtnText ? saveBtnText.innerText : "";
+                if (saveBtnText) saveBtnText.innerText = "Speichere...";
+                saveBtn.disabled = true;
+
+                fetch(saveWebhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Fehler beim Speichern in der Datenbank");
+                    }
+                    selectedReport.saved = true;
+                    
+                    // Add to reports list if not already present
+                    if (!reports.some(r => r.id === selectedReport.id)) {
+                        reports.push(selectedReport);
+                    }
+
+                    renderCurrentReport();
+                    renderArchive();
+                })
+                .catch(err => {
+                    console.error("Speichern fehlgeschlagen:", err);
+                    alert("Fehler beim Speichern des Artikels.");
+                    if (saveBtnText) saveBtnText.innerText = originalBtnText;
+                    saveBtn.disabled = false;
+                });
             }
         });
     }
@@ -284,10 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Filter out the deleted report
                 reports = reports.filter(r => r.id !== selectedReport.id);
-
-                // Persist the updated archive
-                const savedReports = reports.filter(r => r.saved);
-                localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
 
                 selectedReport = null; // Set to null to show empty state
 
@@ -317,10 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 selectedReport.title = newTitle;
                 reportTitle.innerText = newTitle; // Update the UI to show cleaned title
                 
-                if (selectedReport.saved) {
-                    const savedReports = reports.filter(r => r.saved);
-                    localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
-                }
+                // (No local storage update needed since we save to DB)
                 
                 renderArchive();
             } else {

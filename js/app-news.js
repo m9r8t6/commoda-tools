@@ -389,12 +389,59 @@ document.addEventListener("DOMContentLoaded", () => {
             // Clean up any newlines or extra spaces
             const newTitle = reportTitle.innerText.replace(/[\r\n]+/g, " ").trim();
             if (newTitle && newTitle !== selectedReport.title) {
+                const oldId = selectedReport.id;
+                const wasSaved = selectedReport.saved;
+                
                 selectedReport.title = newTitle;
                 reportTitle.innerText = newTitle; // Update the UI to show cleaned title
-                
-                // (No local storage update needed since we save to DB)
-                
                 renderArchive();
+
+                if (wasSaved) {
+                    // Update in DB by deleting old and inserting new
+                    const tempDiv = document.createElement("div");
+                    tempDiv.innerHTML = selectedReport.htmlContent || "";
+                    const plainText = tempDiv.innerText || tempDiv.textContent || "";
+                    
+                    const payload = {
+                        title: newTitle,
+                        text: plainText,
+                        html: selectedReport.htmlContent || "",
+                        url: selectedReport.sourceUrl || "",
+                        date: new Date().toISOString()
+                    };
+
+                    const originalTitleColor = reportTitle.style.color;
+                    reportTitle.style.color = "var(--text-muted)";
+                    reportTitle.title = "Speichert neuen Titel in der Datenbank...";
+
+                    // 1. Delete old record
+                    fetch("https://n8n.baeuerlein-dev.de/webhook/delete-article", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: oldId })
+                    })
+                    .then(() => {
+                        // 2. Save new record
+                        return fetch("https://n8n.baeuerlein-dev.de/webhook/save-article", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(payload)
+                        });
+                    })
+                    .then(res => {
+                        if (!res.ok) throw new Error("Fehler beim Speichern des neuen Titels");
+                        // 3. Reload archive from DB to get the newly generated ID
+                        loadArchiveFromDB();
+                        reportTitle.style.color = originalTitleColor;
+                        reportTitle.title = "Klicken zum Bearbeiten";
+                    })
+                    .catch(err => {
+                        console.error("Fehler beim Update des Titels:", err);
+                        alert("Der Titel konnte nicht in der Datenbank aktualisiert werden.");
+                        reportTitle.style.color = originalTitleColor;
+                        reportTitle.title = "Klicken zum Bearbeiten";
+                    });
+                }
             } else {
                 // Revert to old title if empty
                 reportTitle.innerText = selectedReport.title;
@@ -719,55 +766,73 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Lade gespeicherte Berichte aus der Datenbank
-    fetch("https://n8n.baeuerlein-dev.de/webhook/get-archive?t=" + Date.now(), {
-        method: "GET"
-    })
-    .then(res => {
-        if (!res.ok) {
-            console.error("HTTP-Fehler beim Laden:", res.status);
-            throw new Error("Fehler beim Laden des Archivs");
-        }
-        return res.json();
-    })
-    .then(data => {
-        isFetchingArchive = false;
-        console.log("Geladene Daten aus get-archive:", data);
-        if (data && Array.isArray(data.data)) {
-            data.data.forEach(article => {
-                const fetchedReport = {
-                    id: article.id,
-                    title: article.title || "Gespeicherter Bericht",
-                    date: article.date ? new Date(article.date).toLocaleDateString("de-DE") : "Unbekannt",
-                    source: "Datenbank",
-                    saved: true,
-                    summary: "Aus der Datenbank geladen.",
-                    htmlContent: article.htmlContent 
-                        ? (article.htmlContent.includes('report-body') ? article.htmlContent : `<div class="report-body" style="padding: 20px;">${article.htmlContent}</div>`)
-                        : formatTextToHTML(article.text),
-                    sourceUrl: article.url || ""
-                };
-                // Nur hinzufügen, falls noch nicht vorhanden
-                if (!reports.some(r => r.id === article.id)) {
-                    reports.push(fetchedReport);
-                }
-            });
-            console.log("Aktualisiere Archiv mit", reports.length, "Berichten.");
-            renderArchive();
-            // Wenn kein Bericht aktuell ausgewählt ist, zeige den ersten an
-            if (!selectedReport && reports.length > 0) {
-                selectedReport = reports[0];
-                renderCurrentReport();
-            }
-        } else {
-            console.warn("Unerwartetes Datenformat:", data);
-            renderArchive();
-        }
-    })
-    .catch(err => {
-        isFetchingArchive = false;
-        console.error("Konnte das Archiv nicht laden:", err);
+    function loadArchiveFromDB() {
+        isFetchingArchive = true;
         renderArchive();
-    });
+
+        fetch("https://n8n.baeuerlein-dev.de/webhook/get-archive?t=" + Date.now(), {
+            method: "GET"
+        })
+        .then(res => {
+            if (!res.ok) {
+                console.error("HTTP-Fehler beim Laden:", res.status);
+                throw new Error("Fehler beim Laden des Archivs");
+            }
+            return res.json();
+        })
+        .then(data => {
+            isFetchingArchive = false;
+            console.log("Geladene Daten aus get-archive:", data);
+            
+            if (data && Array.isArray(data.data)) {
+                // Bei einem Reload leeren wir die aktuellen Saved-Reports und laden neu
+                reports = reports.filter(r => !r.saved);
+
+                data.data.forEach(article => {
+                    const fetchedReport = {
+                        id: article.id,
+                        title: article.title || "Gespeicherter Bericht",
+                        date: article.date ? new Date(article.date).toLocaleDateString("de-DE") : "Unbekannt",
+                        source: "Datenbank",
+                        saved: true,
+                        summary: "Aus der Datenbank geladen.",
+                        htmlContent: article.htmlContent 
+                            ? (article.htmlContent.includes('report-body') ? article.htmlContent : `<div class="report-body" style="padding: 20px;">${article.htmlContent}</div>`)
+                            : formatTextToHTML(article.text),
+                        sourceUrl: article.url || ""
+                    };
+                    reports.push(fetchedReport);
+                });
+                
+                console.log("Aktualisiere Archiv mit", reports.length, "Berichten.");
+                renderArchive();
+                
+                // Refresh selected report if it was reloaded from DB (to update its ID)
+                if (selectedReport && selectedReport.saved) {
+                    const updated = reports.find(r => r.title === selectedReport.title);
+                    if (updated) {
+                        selectedReport = updated;
+                    }
+                }
+
+                // Wenn kein Bericht aktuell ausgewählt ist, zeige den ersten an
+                if (!selectedReport && reports.length > 0) {
+                    selectedReport = reports[0];
+                    renderCurrentReport();
+                }
+            } else {
+                console.warn("Unerwartetes Datenformat:", data);
+                renderArchive();
+            }
+        })
+        .catch(err => {
+            isFetchingArchive = false;
+            console.error("Konnte das Archiv nicht laden:", err);
+            renderArchive();
+        });
+    }
+
+    loadArchiveFromDB();
 
     renderArchive();
     renderCurrentReport();

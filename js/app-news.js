@@ -434,6 +434,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const query = searchInput.value.trim();
         if (!query) return;
 
+        // Clear input field after submission
+        searchInput.value = "";
+
         // Deselect current report
         selectedReport = null;
         renderArchive();

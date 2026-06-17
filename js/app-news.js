@@ -267,6 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const payload = {
                     title: selectedReport.title || "Steuer-News",
                     text: plainText,
+                    html: selectedReport.htmlContent || "",
                     url: selectedReport.sourceUrl || "",
                     date: new Date().toISOString()
                 };

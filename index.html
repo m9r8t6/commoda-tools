@@ -12,10 +12,18 @@
 
     <div id="appContainer" style="display: none; width: 100vw; height: 100vh; overflow: hidden;">
         <aside class="sidebar">
-            <div class="brand">
-            <div class="brand-icon">C</div>
-            Commoda Tools Hub
-        </div>
+            <div class="brand" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 24px 24px 16px 24px;">
+                <div class="commoda-logo" style="font-family: 'Arial Black', Impact, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; display: flex; align-items: center;">
+                    <span style="background: linear-gradient(to bottom, #00A7B5 52%, #004764 52%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">COMM</span>
+                    <span style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 0.8em; height: 0.8em; margin: 0 0.05em; border-radius: 50%; border: 3px solid #004764; background: white;">
+                        <svg viewBox="0 0 24 24" style="width: 70%; height: 70%; fill: #00A7B5;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    </span>
+                    <span style="background: linear-gradient(to bottom, #00A7B5 52%, #004764 52%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">DA</span>
+                </div>
+                <div style="font-family: 'Arial', sans-serif; font-size: 11px; font-weight: 600; color: #9CA3AF; letter-spacing: 1.5px; text-transform: uppercase;">
+                    STEUERBERATUNG
+                </div>
+            </div>
         
         <nav class="nav-menu">
             <a href="#" class="nav-item active" data-target="mitarbeiter" data-title="Mitarbeitersuche">
@@ -345,8 +353,18 @@
     <!-- Login Screen Container -->
     <div id="loginScreen" class="login-screen">
         <div class="login-card">
-            <div class="login-logo">C</div>
-            <h2>Commoda Tools Hub</h2>
+            <div class="brand" style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 24px;">
+                <div class="commoda-logo" style="font-family: 'Arial Black', Impact, sans-serif; font-size: 42px; font-weight: 900; letter-spacing: -1px; line-height: 1; display: flex; align-items: center; justify-content: center;">
+                    <span style="background: linear-gradient(to bottom, #00A7B5 52%, #004764 52%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">COMM</span>
+                    <span style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 0.8em; height: 0.8em; margin: 0 0.05em; border-radius: 50%; border: 4px solid #004764; background: white;">
+                        <svg viewBox="0 0 24 24" style="width: 70%; height: 70%; fill: #00A7B5;"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    </span>
+                    <span style="background: linear-gradient(to bottom, #00A7B5 52%, #004764 52%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">DA</span>
+                </div>
+                <div style="font-family: 'Arial', sans-serif; font-size: 14px; font-weight: 600; color: #9CA3AF; letter-spacing: 2px; text-transform: uppercase;">
+                    STEUERBERATUNG
+                </div>
+            </div>
             <p>Bitte melden Sie sich an, um fortzufahren.</p>
             
             <form id="loginForm" class="login-form">

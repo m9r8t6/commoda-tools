@@ -596,21 +596,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
     })
     .then(data => {
-        if (data && data.result && Array.isArray(data.result.points)) {
-            data.result.points.forEach(point => {
-                if (point.payload) {
-                    const fetchedReport = {
-                        id: point.id,
-                        title: point.payload.title || "Gespeicherter Bericht",
-                        date: point.payload.date ? new Date(point.payload.date).toLocaleDateString("de-DE") : "Unbekannt",
-                        source: "Datenbank",
-                        saved: true,
-                        summary: "Aus der Datenbank geladen.",
-                        htmlContent: formatTextToHTML(point.payload.text),
-                        sourceUrl: point.payload.url || ""
-                    };
-                    reports.push(fetchedReport);
-                }
+        if (data && Array.isArray(data.data)) {
+            data.data.forEach(article => {
+                const fetchedReport = {
+                    id: article.id,
+                    title: article.title || "Gespeicherter Bericht",
+                    date: article.date ? new Date(article.date).toLocaleDateString("de-DE") : "Unbekannt",
+                    source: "Datenbank",
+                    saved: true,
+                    summary: "Aus der Datenbank geladen.",
+                    htmlContent: formatTextToHTML(article.text),
+                    sourceUrl: article.url || ""
+                };
+                reports.push(fetchedReport);
             });
             renderArchive();
         }

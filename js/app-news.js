@@ -185,12 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 starBtn = document.createElement("button");
                 starBtn.className = "link-star-btn";
                 wrapper.appendChild(starBtn);
-
-                // Link Icon
-                if (!a.querySelector("svg")) {
-                    const iconSVG = `<svg viewBox="0 0 24 24" style="width: 12px; height: 12px; margin-left: 4px; vertical-align: middle; fill: currentColor;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>`;
-                    a.innerHTML += iconSVG;
-                }
             }
 
             if (starBtn) {
@@ -389,59 +383,12 @@ document.addEventListener("DOMContentLoaded", () => {
             // Clean up any newlines or extra spaces
             const newTitle = reportTitle.innerText.replace(/[\r\n]+/g, " ").trim();
             if (newTitle && newTitle !== selectedReport.title) {
-                const oldId = selectedReport.id;
-                const wasSaved = selectedReport.saved;
-                
                 selectedReport.title = newTitle;
                 reportTitle.innerText = newTitle; // Update the UI to show cleaned title
+                
+                // (No local storage update needed since we save to DB)
+                
                 renderArchive();
-
-                if (wasSaved) {
-                    // Update in DB by deleting old and inserting new
-                    const tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = selectedReport.htmlContent || "";
-                    const plainText = tempDiv.innerText || tempDiv.textContent || "";
-                    
-                    const payload = {
-                        title: newTitle,
-                        text: plainText,
-                        html: selectedReport.htmlContent || "",
-                        url: selectedReport.sourceUrl || "",
-                        date: new Date().toISOString()
-                    };
-
-                    const originalTitleColor = reportTitle.style.color;
-                    reportTitle.style.color = "var(--text-muted)";
-                    reportTitle.title = "Speichert neuen Titel in der Datenbank...";
-
-                    // 1. Delete old record
-                    fetch("https://n8n.baeuerlein-dev.de/webhook/delete-article", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ id: oldId })
-                    })
-                    .then(() => {
-                        // 2. Save new record
-                        return fetch("https://n8n.baeuerlein-dev.de/webhook/save-article", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(payload)
-                        });
-                    })
-                    .then(res => {
-                        if (!res.ok) throw new Error("Fehler beim Speichern des neuen Titels");
-                        // 3. Reload archive from DB to get the newly generated ID
-                        loadArchiveFromDB();
-                        reportTitle.style.color = originalTitleColor;
-                        reportTitle.title = "Klicken zum Bearbeiten";
-                    })
-                    .catch(err => {
-                        console.error("Fehler beim Update des Titels:", err);
-                        alert("Der Titel konnte nicht in der Datenbank aktualisiert werden.");
-                        reportTitle.style.color = originalTitleColor;
-                        reportTitle.title = "Klicken zum Bearbeiten";
-                    });
-                }
             } else {
                 // Revert to old title if empty
                 reportTitle.innerText = selectedReport.title;

@@ -1407,3 +1407,23 @@ body {
     background-color: var(--surface-color);
 }
 
+
+@media print {
+    .sidebar, .news-archive, .news-footer, #downloadPdfBtn, #saveArchiveBtn, #deleteArchiveBtn, .edit-title-icon {
+        display: none !important;
+    }
+    .main-content, .news-main, .news-container, .report-content-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+

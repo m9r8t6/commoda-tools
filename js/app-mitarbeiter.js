@@ -131,14 +131,20 @@ function renderResults(dataArray) {
         let actionsHTML = ``;
         
         if (person.email && person.email !== 'null' && person.email !== null) {
-            actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren">✉️</button>`;
+            actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren" style="display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </button>`;
         }
         if (person.url && person.url !== 'null' && person.url !== null) {
-            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen">🔗</a>`;
+            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen" style="display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+            </a>`;
         }
         
         // NEU: Wir übergeben jetzt die URL statt den Index
-        actionsHTML += `<button onclick="saveCandidateByUrl('${person.url}')" class="add-btn" title="Speichern">+</button>`;
+        actionsHTML += `<button onclick="saveCandidateByUrl('${person.url}')" class="add-btn" title="Speichern" style="display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </button>`;
 
         resultsContainer.innerHTML += `
             <div class="candidate-row">
@@ -248,12 +254,18 @@ function renderSavedCandidates() {
         
         let actionsHTML = ``;
         if (person.email && person.email !== 'null') {
-            actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren">✉️</button>`;
+            actionsHTML += `<button onclick="copyEmail('${person.email}')" class="icon-btn" title="E-Mail kopieren" style="display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+            </button>`;
         }
         if (person.url && person.url !== 'null') {
-            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen">🔗</a>`;
+            actionsHTML += `<a href="${person.url}" target="_blank" class="icon-btn" title="Profil öffnen" style="display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+            </a>`;
         }
-        actionsHTML += `<button onclick="removeCandidate('${person.url}')" class="icon-btn" style="color: #EF4444;" title="Löschen">🗑️</button>`;
+        actionsHTML += `<button onclick="removeCandidate('${person.url}')" class="icon-btn" style="color: #EF4444; display: flex; align-items: center; justify-content: center;" title="Löschen">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>`;
 
         savedGrid.innerHTML += `
             <div class="candidate-row">

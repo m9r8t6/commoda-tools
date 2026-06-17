@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.getElementById("newsSearchInput");
     const reportTitle = document.getElementById("reportTitle");
     const reportDate = document.getElementById("reportDate");
+    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
     const saveBtn = document.getElementById("saveArchiveBtn");
     const bookmarkPath = document.getElementById("bookmarkPath");
     const saveBtnText = document.getElementById("saveBtnText");
@@ -96,12 +97,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `;
             }
+            if (downloadPdfBtn) downloadPdfBtn.style.display = "none";
             if (saveBtn) saveBtn.style.display = "none";
             if (deleteBtn) deleteBtn.style.display = "none";
             return;
         }
 
         // Show buttons
+        if (downloadPdfBtn) downloadPdfBtn.style.display = "inline-flex";
         if (saveBtn) saveBtn.style.display = "inline-flex";
 
         // Title and Date
@@ -233,6 +236,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // --- EVENT LISTENERS ---
+
+    // Download PDF (Print)
+    if (downloadPdfBtn) {
+        downloadPdfBtn.addEventListener("click", () => {
+            window.print();
+        });
+    }
 
     // Save current report to archive
     if (saveBtn) {

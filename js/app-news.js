@@ -169,37 +169,53 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!container) return;
         const anchors = container.querySelectorAll("a");
         anchors.forEach(a => {
-            if (a.dataset.linkProcessed) return;
-            a.dataset.linkProcessed = "true";
-
             const href = a.getAttribute("href");
             if (!href) return;
             const text = a.textContent.trim() || href;
 
-            // Wrap anchor and star button in a span to keep them together
-            const wrapper = document.createElement("span");
-            wrapper.className = "report-link-wrapper";
+            let starBtn = null;
 
-            // Insert wrapper before anchor
-            a.parentNode.insertBefore(wrapper, a);
-            // Move anchor inside wrapper
-            wrapper.appendChild(a);
+            if (a.dataset.linkProcessed === "true") {
+                // Bereits verarbeitet, wahrscheinlich aus der DB geladen
+                if (a.parentNode && a.parentNode.classList.contains("report-link-wrapper")) {
+                    starBtn = a.parentNode.querySelector(".link-star-btn");
+                }
+            } else {
+                a.dataset.linkProcessed = "true";
 
-            // Create star button
-            const starBtn = document.createElement("button");
-            starBtn.className = "link-star-btn";
-            
-            // Check if starred
-            const isStarred = starredLinks.some(link => link.url === href);
-            updateStarButtonState(starBtn, isStarred);
+                // Wrap anchor and star button in a span to keep them together
+                const wrapper = document.createElement("span");
+                wrapper.className = "report-link-wrapper";
 
-            starBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleStarLink(href, text, selectedReport ? selectedReport.title : "Steuer-News", starBtn);
-            });
+                a.parentNode.insertBefore(wrapper, a);
+                wrapper.appendChild(a);
 
-            wrapper.appendChild(starBtn);
+                starBtn = document.createElement("button");
+                starBtn.className = "link-star-btn";
+                wrapper.appendChild(starBtn);
+
+                // Link Icon
+                if (!a.querySelector("svg")) {
+                    const iconSVG = `<svg viewBox="0 0 24 24" style="width: 12px; height: 12px; margin-left: 4px; vertical-align: middle; fill: currentColor;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>`;
+                    a.innerHTML += iconSVG;
+                }
+            }
+
+            if (starBtn) {
+                // Event-Listener hinzufügen (falls noch nicht passiert)
+                if (!starBtn.hasListener) {
+                    starBtn.hasListener = true;
+                    starBtn.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleStarLink(href, text, selectedReport ? selectedReport.title : "Steuer-News", starBtn);
+                    });
+                }
+                
+                // State updaten
+                const isStarred = starredLinks.some(link => link.url === href);
+                updateStarButtonState(starBtn, isStarred);
+            }
         });
     }
 
@@ -621,7 +637,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     source: "Datenbank",
                     saved: true,
                     summary: "Aus der Datenbank geladen.",
-                    htmlContent: article.htmlContent || formatTextToHTML(article.text),
+                    htmlContent: article.htmlContent 
+                        ? (article.htmlContent.includes('report-body') ? article.htmlContent : `<div class="report-body" style="padding: 20px;">${article.htmlContent}</div>`)
+                        : formatTextToHTML(article.text),
                     sourceUrl: article.url || ""
                 };
                 // Nur hinzufügen, falls noch nicht vorhanden

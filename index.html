@@ -28,9 +28,9 @@
                 Kanzlei-Diplomat
             </a>
 
-            <a href="#" class="nav-item" data-target="news" data-title="BMF / Haufe News-Aggregator">
+            <a href="#" class="nav-item" data-target="news" data-title="News">
                 <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                BMF / Haufe News
+                News
             </a>
         </nav>
 
@@ -210,20 +210,20 @@
                 <div class="news-container">
                     <!-- Left Pane: Archive -->
                     <aside class="news-archive">
+                        <div class="weekly-report-section" style="padding: 16px; border-bottom: 1px solid var(--border-color); background-color: var(--surface-color); text-align: center;">
+                            <h3 style="font-size: 13px; font-weight: 700; color: var(--primary-color); margin-bottom: 8px; margin-top: 0;">Wöchentlicher KI-Bericht</h3>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4;">Lass die KI die wichtigsten Urteile und Schreiben der Woche zusammenfassen.</p>
+                            <button id="fetchWeeklyReportBtn" class="btn-primary" style="width: 100%; font-size: 13px; padding: 8px 12px; margin: 0; min-height: 36px;">
+                                <span class="btn-text">Bericht generieren</span>
+                                <div class="spinner-small" id="weeklySpinner" style="display: none; border-color: white; border-bottom-color: transparent;"></div>
+                            </button>
+                        </div>
                         <div class="archive-search-container">
                             <input type="text" id="newsSearchInput" class="filter-input" placeholder="Ask AI about saved reports..." style="width: 100%;">
                         </div>
                         <div class="archive-section-title" style="padding: 12px 16px 4px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Gespeicherte Berichte</div>
                         <div class="archive-list" id="archiveList" style="flex: 1; overflow-y: auto;">
                             <!-- Dynamic list of saved reports -->
-                        </div>
-                        
-                        <div class="archive-section-title" style="padding: 12px 16px 4px 16px; border-top: 1px solid var(--border-color); font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center;">
-                            <span>Markierte Links</span>
-                            <span id="starred-links-count" style="background-color: var(--primary-light); color: var(--primary-color); border-radius: 10px; padding: 2px 6px; font-size: 10px; font-weight: 600;">0</span>
-                        </div>
-                        <div id="starredLinksList" style="flex: 1; overflow-y: auto; padding: 8px 12px;">
-                            <!-- Dynamic list of starred links -->
                         </div>
                     </aside>
 

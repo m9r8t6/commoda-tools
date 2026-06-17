@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const reportDisplay = document.getElementById("reportDisplay");
     const fetchBtn = document.getElementById("fetchNewsBtn");
     const spinner = document.getElementById("newsSpinner");
+    const fetchWeeklyReportBtn = document.getElementById("fetchWeeklyReportBtn");
+    const weeklySpinner = document.getElementById("weeklySpinner");
 
     let deleteConfirmActive = false;
 
@@ -217,9 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
         // Persist to localStorage
         localStorage.setItem("starredNewsLinks", JSON.stringify(starredLinks));
 
-        // Re-render the starred links list in the sidebar
-        renderStarredLinks();
-
         // Update all star buttons inside the current report that match this URL
         if (reportDisplay) {
             const btns = reportDisplay.querySelectorAll(".link-star-btn");
@@ -231,77 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
-    }
-
-    function removeStarredLink(url) {
-        starredLinks = starredLinks.filter(link => link.url !== url);
-        
-        // Persist to localStorage
-        localStorage.setItem("starredNewsLinks", JSON.stringify(starredLinks));
-
-        // Re-render list
-        renderStarredLinks();
-
-        // Update any matching buttons in the report display
-        if (reportDisplay) {
-            const btns = reportDisplay.querySelectorAll(".link-star-btn");
-            btns.forEach(b => {
-                const siblingLink = b.previousElementSibling;
-                if (siblingLink && siblingLink.tagName === "A" && siblingLink.getAttribute("href") === url) {
-                    updateStarButtonState(b, false);
-                }
-            });
-        }
-    }
-
-    function renderStarredLinks() {
-        const listContainer = document.getElementById("starredLinksList");
-        const countBadge = document.getElementById("starred-links-count");
-        if (!listContainer) return;
-
-        listContainer.innerHTML = "";
-
-        if (countBadge) {
-            countBadge.innerText = starredLinks.length;
-        }
-
-        if (starredLinks.length === 0) {
-            listContainer.innerHTML = `
-                <div style="padding: 16px; color: var(--text-muted); font-style: italic; text-align: center; font-size: 13px;">
-                    Keine markierten Links
-                </div>`;
-            return;
-        }
-
-        // Sort by timestamp if available, latest first
-        const sortedLinks = [...starredLinks].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-
-        sortedLinks.forEach(link => {
-            const item = document.createElement("div");
-            item.className = "starred-link-item";
-            item.innerHTML = `
-                <div style="flex: 1; min-width: 0;">
-                    <a href="${link.url}" target="_blank" class="starred-link-anchor" title="${link.text}">
-                        ${link.text}
-                    </a>
-                    <div class="starred-link-source" title="Quelle: ${link.source}">
-                        Quelle: ${link.source}
-                    </div>
-                </div>
-                <button class="unstar-btn" title="Link entfernen">
-                    <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                </button>
-            `;
-
-            const unstarBtn = item.querySelector(".unstar-btn");
-            unstarBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                removeStarredLink(link.url);
-            });
-
-            listContainer.appendChild(item);
-        });
     }
 
     // --- EVENT LISTENERS ---
@@ -470,10 +398,91 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (fetchWeeklyReportBtn) {
+        fetchWeeklyReportBtn.addEventListener("click", () => {
+            fetchWeeklyReportBtn.disabled = true;
+            if (weeklySpinner) weeklySpinner.style.display = "inline-block";
+            const originalText = fetchWeeklyReportBtn.querySelector(".btn-text");
+            if (originalText) originalText.innerText = "Generiere...";
+
+            // Placeholder webhook for weekly report
+            const webhookUrl = `${window.APP_CONFIG.API_BASE_URL}/webhook/fetch-weekly-report`;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: "generate_weekly" })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Netzwerkantwort war nicht ok");
+                return response.json();
+            })
+            .then(data => {
+                let reportData = Array.isArray(data) ? data[0] : data;
+                
+                if (!reportData || reportData.status !== "success" || !reportData.html_report) {
+                    throw new Error("Ungültiges Datenformat vom Webhook erhalten");
+                }
+
+                const fetchedReport = {
+                    id: Date.now(),
+                    title: `Wöchentlicher KI-Bericht`,
+                    date: new Date().toLocaleDateString("de-DE"),
+                    source: "KI Zusammenfassung",
+                    saved: false,
+                    summary: `Zusammenfassung der wichtigsten Urteile und Schreiben der Woche.`,
+                    htmlContent: reportData.html_report,
+                    sourceUrl: "Wochenbericht"
+                };
+
+                reports.push(fetchedReport);
+                selectedReport = fetchedReport;
+
+                resetWeeklyUI();
+                renderCurrentReport();
+                renderArchive();
+            })
+            .catch(error => {
+                console.warn("Webhook-Fehler, nutze Offline-Fallback für Wochenbericht:", error);
+                
+                // Fallback for weekly report
+                const fallbackReport = {
+                    id: Date.now(),
+                    title: `Wöchentlicher KI-Bericht (Offline)`,
+                    date: new Date().toLocaleDateString("de-DE"),
+                    source: "KI Zusammenfassung",
+                    saved: false,
+                    summary: `Offline Fallback für den wöchentlichen Bericht.`,
+                    htmlContent: `<div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                        <h1 style="color: var(--primary-color);">Wöchentlicher KI-Bericht</h1>
+                        <p>Dies ist ein Platzhalter-Bericht, da der Webhook nicht erreicht werden konnte.</p>
+                        <ul>
+                            <li><strong>BMF:</strong> Neue Richtlinien zur Home-Office-Pauschale. <a href="https://bundesfinanzministerium.de" target="_blank">BMF Link</a></li>
+                            <li><strong>Haufe:</strong> Wichtige BFH Urteile zur Umsatzsteuer. <a href="https://haufe.de" target="_blank">Haufe Link</a></li>
+                        </ul>
+                    </div>`,
+                    sourceUrl: "Wochenbericht"
+                };
+
+                reports.push(fallbackReport);
+                selectedReport = fallbackReport;
+
+                resetWeeklyUI();
+                renderCurrentReport();
+                renderArchive();
+            });
+
+            function resetWeeklyUI() {
+                fetchWeeklyReportBtn.disabled = false;
+                if (weeklySpinner) weeklySpinner.style.display = "none";
+                if (originalText) originalText.innerText = "Bericht generieren";
+            }
+        });
+    }
+
     // --- INITIALIZATION ---
     renderArchive();
     renderCurrentReport();
-    renderStarredLinks();
 
     // Attach listener to sidebar links so it updates when switching views
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -482,7 +491,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (target === 'news') {
                 renderArchive();
                 renderCurrentReport();
-                renderStarredLinks();
             }
         });
     });

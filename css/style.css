@@ -1396,3 +1396,8 @@ body {
     width: 16px;
     height: 16px;
 }
+#reportTitle[contenteditable="true"]:hover,
+#reportTitle[contenteditable="true"]:focus {
+    border-bottom-color: var(--primary-color) !important;
+}
+

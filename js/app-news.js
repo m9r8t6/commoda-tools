@@ -297,6 +297,31 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Editable title handler
+    if (reportTitle) {
+        reportTitle.addEventListener("blur", () => {
+            if (!selectedReport) return;
+            const newTitle = reportTitle.innerText.trim();
+            if (newTitle && newTitle !== selectedReport.title) {
+                selectedReport.title = newTitle;
+                
+                if (selectedReport.saved) {
+                    const savedReports = reports.filter(r => r.saved);
+                    localStorage.setItem("savedNewsReports", JSON.stringify(savedReports));
+                }
+                
+                renderArchive();
+            }
+        });
+
+        reportTitle.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                reportTitle.blur();
+            }
+        });
+    }
+
     // Search input handler
     if (searchInput) {
         searchInput.addEventListener("input", renderArchive);

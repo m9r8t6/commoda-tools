@@ -301,9 +301,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reportTitle) {
         reportTitle.addEventListener("blur", () => {
             if (!selectedReport) return;
-            const newTitle = reportTitle.innerText.trim();
+            // Clean up any newlines or extra spaces
+            const newTitle = reportTitle.innerText.replace(/[\r\n]+/g, " ").trim();
             if (newTitle && newTitle !== selectedReport.title) {
                 selectedReport.title = newTitle;
+                reportTitle.innerText = newTitle; // Update the UI to show cleaned title
                 
                 if (selectedReport.saved) {
                     const savedReports = reports.filter(r => r.saved);
@@ -311,6 +313,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 
                 renderArchive();
+            } else {
+                // Revert to old title if empty
+                reportTitle.innerText = selectedReport.title;
             }
         });
 
@@ -318,6 +323,23 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.key === "Enter") {
                 e.preventDefault();
                 reportTitle.blur();
+            }
+        });
+    }
+
+    const editTitleIcon = document.querySelector(".edit-title-icon");
+    if (editTitleIcon && reportTitle) {
+        editTitleIcon.addEventListener("click", () => {
+            reportTitle.focus();
+            
+            // Move cursor to the end
+            if (typeof window.getSelection !== "undefined" && typeof document.createRange !== "undefined") {
+                const range = document.createRange();
+                range.selectNodeContents(reportTitle);
+                range.collapse(false);
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
             }
         });
     }

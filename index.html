@@ -233,7 +233,12 @@
                         <div class="report-content-wrapper" id="reportContentWrapper">
                             <div class="report-header">
                                 <div class="report-title-meta">
-                                    <h2 id="reportTitle" contenteditable="true" title="Titel bearbeiten" style="outline: none; border-bottom: 1px dashed transparent; transition: border-color 0.2s; cursor: text;">Wöchentlicher BMF & Haufe Steuer-Report</h2>
+                                    <div class="report-title-container" style="display: flex; align-items: center; gap: 8px; position: relative;">
+                                        <h2 id="reportTitle" contenteditable="true" spellcheck="false" title="Klicken zum Bearbeiten" style="outline: none; border-bottom: 2px solid transparent; transition: all 0.2s ease; cursor: text; padding-bottom: 2px; border-radius: 2px;">Wöchentlicher BMF & Haufe Steuer-Report</h2>
+                                        <div class="edit-title-icon" style="color: var(--text-muted); opacity: 0; transition: opacity 0.2s ease; cursor: pointer; display: flex; align-items: center;">
+                                            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                        </div>
+                                    </div>
                                     <span id="reportDate" class="report-date">Datum: 13.06.2026</span>
                                 </div>
                                 <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">

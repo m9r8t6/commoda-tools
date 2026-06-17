@@ -1396,8 +1396,14 @@ body {
     width: 16px;
     height: 16px;
 }
-#reportTitle[contenteditable="true"]:hover,
+.report-title-container:hover .edit-title-icon {
+    opacity: 1 !important;
+}
+#reportTitle[contenteditable="true"]:hover {
+    border-bottom-color: var(--border-color) !important;
+}
 #reportTitle[contenteditable="true"]:focus {
     border-bottom-color: var(--primary-color) !important;
+    background-color: var(--surface-color);
 }
 

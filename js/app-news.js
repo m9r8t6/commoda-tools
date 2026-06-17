@@ -621,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     source: "Datenbank",
                     saved: true,
                     summary: "Aus der Datenbank geladen.",
-                    htmlContent: formatTextToHTML(article.text),
+                    htmlContent: article.htmlContent || formatTextToHTML(article.text),
                     sourceUrl: article.url || ""
                 };
                 // Nur hinzufügen, falls noch nicht vorhanden

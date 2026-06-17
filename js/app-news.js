@@ -437,6 +437,103 @@ document.addEventListener("DOMContentLoaded", () => {
     // Search input handler
     if (searchInput) {
         searchInput.addEventListener("input", renderArchive);
+        searchInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const query = searchInput.value.trim();
+                if (!query) return;
+
+                // Deselect current report
+                selectedReport = null;
+                renderArchive();
+                
+                // Show loading state
+                if (reportTitle) reportTitle.innerText = "KI sucht im Archiv...";
+                if (reportDate) reportDate.innerText = "";
+                if (downloadPdfBtn) downloadPdfBtn.style.display = "none";
+                if (saveBtn) saveBtn.style.display = "none";
+                if (deleteBtn) deleteBtn.style.display = "none";
+
+                if (reportDisplay) {
+                    reportDisplay.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--primary-color); text-align: center; padding: 60px 20px;">
+                            <div class="spinner-small" style="border-color: var(--primary-color); border-bottom-color: transparent; width: 40px; height: 40px; margin-bottom: 24px; display: block; border-width: 3px;"></div>
+                            <h3 style="font-size: 16px; font-weight: 600;">Analysiere Wissensdatenbank...</h3>
+                            <p style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">Die KI durchsucht deine gespeicherten Artikel nach einer passenden Antwort.</p>
+                        </div>
+                    `;
+                }
+
+                // Call Webhook
+                fetch("https://n8n.baeuerlein-dev.de/webhook/ask-ai-rag-news", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ query: query })
+                })
+                .then(res => {
+                    if (!res.ok) throw new Error("Netzwerkfehler");
+                    return res.json();
+                })
+                .then(data => {
+                    // N8N often returns array for webhooks
+                    const result = Array.isArray(data) ? data[0] : data;
+                    const answer = result.answer || "Keine Antwort generiert.";
+                    const sources = result.sources || [];
+
+                    if (reportTitle) reportTitle.innerText = "KI-Antwort";
+                    if (reportDate) reportDate.innerText = `Suchanfrage: "${query}"`;
+
+                    let html = `<div class="report-body" style="padding: 24px; font-size: 14px; line-height: 1.6;">`;
+                    
+                    // Answer
+                    const paragraphs = answer.split(/\\n\\s*\\n/);
+                    paragraphs.forEach(p => {
+                        const lines = p.trim().replace(/\\n/g, "<br>");
+                        if (lines) html += `<p style="margin-bottom: 1em;">${lines}</p>`;
+                    });
+
+                    // Sources
+                    if (sources && sources.length > 0) {
+                        html += `<div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border-color);">`;
+                        html += `<h4 style="font-size: 13px; font-weight: 700; color: var(--primary-color); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">Referenzierte Quellen</h4>`;
+                        html += `<div style="display: flex; flex-direction: column; gap: 8px;">`;
+                        
+                        sources.forEach((src, idx) => {
+                            // Extrahiere URL und Titel flexibel aus verschiedenen möglichen Qdrant/N8N Strukturen
+                            const srcUrl = src.url || (src.metadata && src.metadata.url) || (src.payload && src.payload.metadata && src.payload.metadata.url) || "#";
+                            const srcTitle = src.title || (src.metadata && src.metadata.title) || (src.payload && src.payload.metadata && src.payload.metadata.title) || `Quelle ${idx + 1}`;
+                            
+                            html += `
+                                <a href="${srcUrl}" target="_blank" style="display: flex; align-items: flex-start; padding: 10px 12px; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 6px; text-decoration: none; color: inherit; transition: border-color 0.2s ease;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 2px;">${srcTitle}</div>
+                                        <div style="font-size: 11px; color: var(--text-muted); word-break: break-all;">${srcUrl !== '#' ? srcUrl : 'Kein Link verfügbar'}</div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: var(--text-muted); margin-top: 2px;"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                                </a>
+                            `;
+                        });
+                        
+                        html += `</div></div>`;
+                    }
+
+                    html += `</div>`;
+                    if (reportDisplay) reportDisplay.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error("AI Search Error:", err);
+                    if (reportTitle) reportTitle.innerText = "Fehler bei der Suche";
+                    if (reportDisplay) {
+                        reportDisplay.innerHTML = `
+                            <div style="padding: 40px 20px; text-align: center; color: var(--text-muted);">
+                                <svg viewBox="0 0 24 24" style="width: 48px; height: 48px; fill: #ef4444; margin-bottom: 16px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                <div>Konnte die KI nicht erreichen. Bitte versuche es später noch einmal.</div>
+                                <div style="font-size: 11px; margin-top: 8px; opacity: 0.7;">Details: ${err.message}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+        });
     }
 
     // Fetch news button handler

@@ -587,15 +587,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Lade gespeicherte Berichte aus der Datenbank
-    fetch("https://n8n.baeuerlein-dev.de/webhook/get-archive", {
-        method: "GET",
-        headers: { "Accept": "application/json" }
+    fetch("https://n8n.baeuerlein-dev.de/webhook/get-archive?t=" + Date.now(), {
+        method: "GET"
     })
     .then(res => {
-        if (!res.ok) throw new Error("Fehler beim Laden des Archivs");
+        if (!res.ok) {
+            console.error("HTTP-Fehler beim Laden:", res.status);
+            throw new Error("Fehler beim Laden des Archivs");
+        }
         return res.json();
     })
     .then(data => {
+        console.log("Geladene Daten aus get-archive:", data);
         if (data && Array.isArray(data.data)) {
             data.data.forEach(article => {
                 const fetchedReport = {
@@ -608,9 +611,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     htmlContent: formatTextToHTML(article.text),
                     sourceUrl: article.url || ""
                 };
-                reports.push(fetchedReport);
+                // Nur hinzufügen, falls noch nicht vorhanden
+                if (!reports.some(r => r.id === article.id)) {
+                    reports.push(fetchedReport);
+                }
             });
+            console.log("Aktualisiere Archiv mit", reports.length, "Berichten.");
             renderArchive();
+            // Wenn kein Bericht aktuell ausgewählt ist, zeige den ersten an
+            if (!selectedReport && reports.length > 0) {
+                selectedReport = reports[0];
+                renderCurrentReport();
+            }
+        } else {
+            console.warn("Unerwartetes Datenformat:", data);
         }
     })
     .catch(err => {
